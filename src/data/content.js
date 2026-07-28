@@ -53,52 +53,309 @@ export const batches = [
   },
 ]
 
-// Notes & YT videos, organised subject-wise.
-// EDIT ME: replace `youtubeId` with your real YouTube video ID for that
-// subject's lecture (the part after "v=" in the YouTube URL,
-// e.g. for https://www.youtube.com/watch?v=dQw4w9WgXcQ the id is "dQw4w9WgXcQ").
-// For each note, `link` should point to a PDF placed in public/notes/
-// (e.g. put the file at public/notes/physics-ch1.pdf and set
-// link: "/notes/physics-ch1.pdf"). Leave link: "" to hide the download button.
-export const subjects = [
+// ============================================================
+// NOTES SECTION — Class -> Subject -> Chapters -> Notes/Video
+// EDIT ME:
+// - Chapter names below follow the NCERT (CBSE-aligned, Uttarakhand
+//   board) 2025-26 syllabus. NCERT is currently rolling out revised
+//   "rationalized" textbooks year by year — if your session's book has
+//   different chapter names/order, just edit the `title` values below,
+//   the structure will keep working exactly the same.
+// - `youtubeId` = the part after "v=" in a YouTube URL
+//   (e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ -> "dQw4w9WgXcQ").
+//   You can set one video per subject, or per chapter if you want to be
+//   more specific — both fields exist below.
+// - For each note, `link` should point to a PDF placed in public/notes/
+//   (e.g. put the file at public/notes/physics-ch1.pdf and set
+//   link: "/notes/physics-ch1.pdf"). Leave link: "" to hide the
+//   download button and show "Coming soon" instead.
+// ============================================================
+
+// helper so we don't have to repeat { id, title, notes: [], youtubeId: '' }
+// for every single chapter by hand
+const mkChapters = (titles) =>
+  titles.map((title, i) => ({ id: `ch-${i + 1}`, title, youtubeId: "", notes: [] }))
+
+export const classesData = [
   {
-    id: "physics",
-    name: "Physics",
-    batch: "Class 11 & 12 — Science",
-    youtubeId: "", // EDIT ME: e.g. "dQw4w9WgXcQ"
-    notes: [
-      { title: "Chapter 1 — Units & Measurements", desc: "Complete notes with solved examples.", link: "" },
-      { title: "Chapter 2 — Motion in a Straight Line", desc: "Formulas, graphs & practice questions.", link: "" },
+    id: "class-9",
+    label: "Class 9",
+    subjects: [
+      {
+        id: "class-9-maths",
+        name: "Mathematics",
+        youtubeId: "", // EDIT ME: subject-level video (optional)
+        chapters: mkChapters([
+          "Number Systems",
+          "Polynomials",
+          "Coordinate Geometry",
+          "Linear Equations in Two Variables",
+          "Introduction to Euclid's Geometry",
+          "Lines and Angles",
+          "Triangles",
+          "Quadrilaterals",
+          "Circles",
+          "Heron's Formula",
+          "Surface Areas and Volumes",
+          "Statistics",
+        ]),
+      },
+      {
+        id: "class-9-science",
+        name: "Science",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Matter in Our Surroundings",
+          "Is Matter Around Us Pure",
+          "Atoms and Molecules",
+          "Structure of the Atom",
+          "The Fundamental Unit of Life",
+          "Tissues",
+          "Motion",
+          "Force and Laws of Motion",
+          "Gravitation",
+          "Work and Energy",
+          "Sound",
+          "Improvement in Food Resources",
+        ]),
+      },
     ],
   },
   {
-    id: "chemistry",
-    name: "Chemistry",
-    batch: "Class 11 & 12 — Science",
-    youtubeId: "",
-    notes: [
-      { title: "Organic Chemistry Basics", desc: "Nomenclature & reaction mechanisms.", link: "" },
-      { title: "Periodic Table & Trends", desc: "Quick-revision notes with diagrams.", link: "" },
+    id: "class-10",
+    label: "Class 10",
+    subjects: [
+      {
+        id: "class-10-maths",
+        name: "Mathematics",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Real Numbers",
+          "Polynomials",
+          "Pair of Linear Equations in Two Variables",
+          "Quadratic Equations",
+          "Arithmetic Progressions",
+          "Triangles",
+          "Coordinate Geometry",
+          "Introduction to Trigonometry",
+          "Some Applications of Trigonometry",
+          "Circles",
+          "Areas Related to Circles",
+          "Surface Areas and Volumes",
+          "Statistics",
+          "Probability",
+        ]),
+      },
+      {
+        id: "class-10-science",
+        name: "Science",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Chemical Reactions and Equations",
+          "Acids, Bases and Salts",
+          "Metals and Non-metals",
+          "Carbon and its Compounds",
+          "Life Processes",
+          "Control and Coordination",
+          "How do Organisms Reproduce?",
+          "Heredity and Evolution",
+          "Light — Reflection and Refraction",
+          "The Human Eye and the Colourful World",
+          "Electricity",
+          "Magnetic Effects of Electric Current",
+          "Our Environment",
+        ]),
+      },
     ],
   },
   {
-    id: "mathematics",
-    name: "Mathematics",
-    batch: "Class 11 & 12 — Science",
-    youtubeId: "KEddsa_lXLU",
-    notes: [
-      { title: "Trigonometry Formula Sheet", desc: "All identities in one page.", link: "" },
-      { title: "Sets, Relations & Functions", desc: "Concept notes + solved problems.", link: "" },
+    id: "class-11",
+    label: "Class 11",
+    subjects: [
+      {
+        id: "class-11-maths",
+        name: "Mathematics",
+        youtubeId: "KEddsa_lXLU", // set from your latest YouTube link
+        chapters: mkChapters([
+          "Sets",
+          "Relations and Functions",
+          "Trigonometric Functions",
+          "Complex Numbers and Quadratic Equations",
+          "Linear Inequalities",
+          "Permutations and Combinations",
+          "Binomial Theorem",
+          "Sequences and Series",
+          "Straight Lines",
+          "Conic Sections",
+          "Introduction to Three Dimensional Geometry",
+          "Limits and Derivatives",
+          "Statistics",
+          "Probability",
+        ]),
+      },
+      {
+        id: "class-11-physics",
+        name: "Physics",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Units and Measurements",
+          "Motion in a Straight Line",
+          "Motion in a Plane",
+          "Laws of Motion",
+          "Work, Energy and Power",
+          "System of Particles and Rotational Motion",
+          "Gravitation",
+          "Mechanical Properties of Solids",
+          "Mechanical Properties of Fluids",
+          "Thermal Properties of Matter",
+          "Thermodynamics",
+          "Kinetic Theory",
+          "Oscillations",
+          "Waves",
+        ]),
+      },
+      {
+        id: "class-11-chemistry",
+        name: "Chemistry",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Some Basic Concepts of Chemistry",
+          "Structure of Atom",
+          "Classification of Elements and Periodicity in Properties",
+          "Chemical Bonding and Molecular Structure",
+          "States of Matter",
+          "Thermodynamics",
+          "Equilibrium",
+          "Redox Reactions",
+          "The p-Block Elements (Group 13 & 14)",
+          "Organic Chemistry — Some Basic Principles and Techniques",
+          "Hydrocarbons",
+        ]),
+      },
     ],
   },
   {
-    id: "reasoning-ga",
-    name: "Reasoning & GA",
-    batch: "Government Exam Preparation",
-    youtubeId: "",
-    notes: [
-      { title: "Reasoning Shortcuts", desc: "Time-saving tricks for SSC/Banking exams.", link: "" },
-      { title: "Current Affairs Digest", desc: "Monthly GK/GA compilation.", link: "" },
+    id: "class-12",
+    label: "Class 12",
+    subjects: [
+      {
+        id: "class-12-maths",
+        name: "Mathematics",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Relations and Functions",
+          "Inverse Trigonometric Functions",
+          "Matrices",
+          "Determinants",
+          "Continuity and Differentiability",
+          "Application of Derivatives",
+          "Integrals",
+          "Application of Integrals",
+          "Differential Equations",
+          "Vector Algebra",
+          "Three Dimensional Geometry",
+          "Linear Programming",
+          "Probability",
+        ]),
+      },
+      {
+        id: "class-12-physics",
+        name: "Physics",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Electric Charges and Fields",
+          "Electrostatic Potential and Capacitance",
+          "Current Electricity",
+          "Moving Charges and Magnetism",
+          "Magnetism and Matter",
+          "Electromagnetic Induction",
+          "Alternating Current",
+          "Electromagnetic Waves",
+          "Ray Optics and Optical Instruments",
+          "Wave Optics",
+          "Dual Nature of Radiation and Matter",
+          "Atoms",
+          "Nuclei",
+          "Semiconductor Electronics",
+        ]),
+      },
+      {
+        id: "class-12-chemistry",
+        name: "Chemistry",
+        youtubeId: "",
+        chapters: mkChapters([
+          "The Solid State",
+          "Solutions",
+          "Electrochemistry",
+          "Chemical Kinetics",
+          "The p-Block Elements",
+          "The d and f Block Elements",
+          "Coordination Compounds",
+          "Haloalkanes and Haloarenes",
+          "Alcohols, Phenols and Ethers",
+          "Aldehydes, Ketones and Carboxylic Acids",
+          "Amines",
+          "Biomolecules",
+        ]),
+      },
+    ],
+  },
+  {
+    id: "government",
+    label: "Government Exam",
+    subjects: [
+      {
+        id: "govt-reasoning",
+        name: "Reasoning",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Analogy & Classification",
+          "Series Completion",
+          "Coding-Decoding",
+          "Blood Relations",
+          "Direction Sense",
+          "Syllogism",
+          "Puzzle & Seating Arrangement",
+        ]),
+      },
+      {
+        id: "govt-quant",
+        name: "Quantitative Aptitude",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Number System",
+          "Percentage",
+          "Profit & Loss",
+          "Simple & Compound Interest",
+          "Time, Speed & Distance",
+          "Ratio & Proportion",
+          "Data Interpretation",
+        ]),
+      },
+      {
+        id: "govt-english",
+        name: "English",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Reading Comprehension",
+          "Error Spotting",
+          "Fill in the Blanks",
+          "Synonyms & Antonyms",
+          "Para Jumbles",
+        ]),
+      },
+      {
+        id: "govt-ga",
+        name: "General Awareness",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Static GK",
+          "Current Affairs",
+          "Indian Polity",
+          "Geography",
+          "History",
+        ]),
+      },
     ],
   },
 ]
