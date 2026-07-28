@@ -360,6 +360,23 @@ export const classesData = [
   },
 ]
 
+// Flat subject list for the Notes page (Notes.jsx needs { id, name, batch, youtubeId, notes }).
+// Auto-built from classesData above so you don't have to maintain two copies —
+// edit chapter titles/links in classesData and this stays in sync.
+export const subjects = classesData.flatMap((cls) =>
+  cls.subjects.map((sub) => ({
+    id: sub.id,
+    name: sub.name,
+    batch: cls.label,
+    youtubeId: sub.youtubeId || "",
+    notes: sub.chapters.map((ch) => ({
+      title: ch.title,
+      desc: "Chapter notes", // EDIT ME: add a real description if you want
+      link: "", // EDIT ME: add a PDF/download link to show a "Download" button instead of "Coming soon"
+    })),
+  }))
+)
+
 export const faculty = [
   { initials: "PS", name: "Prof. — Physics", detail: "M.Sc. Physics · 10+ years teaching Class 11-12 & competitive exam physics." },
   { initials: "CM", name: "Prof. — Chemistry", detail: "M.Sc. Chemistry · Specialist in Organic & Physical Chemistry for boards." },
