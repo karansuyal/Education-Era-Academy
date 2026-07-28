@@ -85,7 +85,7 @@ export const subjects = [
     id: "mathematics",
     name: "Mathematics",
     batch: "Class 11 & 12 — Science",
-    youtubeId: "",
+    youtubeId: "KEddsa_lXLU",
     notes: [
       { title: "Trigonometry Formula Sheet", desc: "All identities in one page.", link: "" },
       { title: "Sets, Relations & Functions", desc: "Concept notes + solved problems.", link: "" },
