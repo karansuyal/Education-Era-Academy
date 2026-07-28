@@ -20,7 +20,7 @@ export default function FAQ() {
                 <span className="faq-icon">{openIndex === i ? '−' : '+'}</span>
               </button>
               <div className="faq-answer">
-                <p>{f.a}</p>
+                {typeof f.a === "string" ? <p>{f.a}</p> : f.a}
               </div>
             </div>
           ))}
