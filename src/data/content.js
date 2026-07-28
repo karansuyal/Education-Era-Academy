@@ -104,16 +104,16 @@ export const faqs = [
     a: "Every batch is capped so each student gets individual attention — ask us the current number for the batch you're interested in.",
   },
   {
-    q: "Is there a fee refund policy?",
-    a: "Yes — if you're not satisfied after the first two weeks, unused fees for the remaining months are refunded. Full terms are shared at admission.",
+    q: "Do you provide study materials?",
+    a: "Yes — We provide well-structured notes, practice questions, assignments, and regular test series to help students prepare effectively.",
   },
   {
     q: "Do you offer EMI / installment payment?",
     a: "Yes, fees can be split into monthly installments — see the Fees section below for details.",
   },
   {
-    q: "What study material is provided?",
-    a: "Printed notes, chapter-wise practice sheets, and weekly test papers are included in the course fee.",
+    q: "Do you offer online classes?",
+    a: "Yes. All recorded classes are uploaded to our official YouTube channel, allowing students to learn anytime, anywhere and revise lessons whenever needed.\n\n📺 YouTube Channel: Education Era\n🔗 https://youtube.com/@educationera1291",
   },
 ]
 
