@@ -407,8 +407,10 @@ export const galleryItems = [
   // EDIT ME: put your real photo files directly inside the public/ folder using these
   // exact filenames (or change the "src" path below to match whatever names you used).
   { type: "image", label: "Classroom", caption: "Main classroom, Batch SCI-11-12", src: "/classroom.jpg" },
-  { type: "image", label: "Library", caption: "Reference library & reading room", src: "/library.jpg" },
+  { type: "image", label: "Doubt Session", caption: "Evening doubt-clearing in progress", src: "/doubt-session.jpg" },
   { type: "image", label: "Lab", caption: "Science practical lab", src: "/lab.jpg" },
+  
+  
   {
     type: "video",
     label: "Teaching Demo",
@@ -416,8 +418,9 @@ export const galleryItems = [
     youtubeId: "2J1czXAhbZI", // EDIT ME: put your real video file at public/videos/teaching-demo.mp4
     poster: "", // optional: path to a thumbnail image, e.g. "/videos/teaching-demo-poster.jpg"
   },
+  { type: "image", label: "Library", caption: "Reference library & reading room", src: "/library.jpg" },
   { type: "image", label: "Result Day", caption: "Rank card distribution, March 2026", src: "/result-day.jpg" },
-  { type: "image", label: "Doubt Session", caption: "Evening doubt-clearing in progress", src: "/doubt-session.jpg" },
+  
 ]
 
 export const faqs = [
