@@ -113,7 +113,7 @@ export const faqs = [
   },
   {
     q: "Do you offer online classes?",
-    a: "Yes. All recorded classes are uploaded to our official YouTube channel, allowing students to learn anytime, anywhere and revise lessons whenever needed.\n\n📺 YouTube Channel: Education Era\n🔗 https://youtube.com/@educationera1291",
+    a: "Yes. All recorded classes are uploaded to our official YouTube channel, allowing students to learn anytime, anywhere and revise lessons whenever needed.",
   },
 ]
 
