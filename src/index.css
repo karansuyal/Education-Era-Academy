@@ -232,6 +232,32 @@ section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); max-width: 24ch; margin-bott
 @media (max-width: 900px) { .fee-grid { grid-template-columns: 1fr; } }
 
 /* ==========================================================
+   NOTES
+   ========================================================== */
+.notes-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 32px; }
+.notes-tab { font-family: var(--font-mono); font-size: 0.85rem; padding: 9px 18px; border-radius: 999px; border: 1.5px solid rgba(27,58,47,0.2); background: transparent; color: var(--ink); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.notes-tab:hover { border-color: var(--ink); }
+.notes-tab.active { background: var(--ink); color: var(--chalk); border-color: var(--ink); }
+
+.notes-panel { background: #fff; border: 1px solid rgba(27,58,47,0.1); border-radius: 8px; padding: 28px; }
+.notes-panel-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+.notes-panel-header h3 { font-size: 1.3rem; }
+.notes-batch-tag { font-family: var(--font-mono); font-size: 0.75rem; color: var(--rank-red); }
+
+.notes-video-wrap { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 6px; overflow: hidden; margin-bottom: 24px; }
+.notes-video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.notes-video-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--chalk); font-family: var(--font-mono); font-size: 0.9rem; padding: 20px; }
+.notes-video-placeholder small { color: rgba(240,237,230,0.6); margin-top: 6px; }
+
+.notes-list { display: flex; flex-direction: column; gap: 0; }
+.notes-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px dashed rgba(27,58,47,0.15); }
+.notes-item:last-child { border-bottom: none; }
+.notes-item h4 { font-size: 1rem; margin-bottom: 4px; }
+.notes-item p { font-size: 0.85rem; color: var(--slate); }
+.notes-soon { font-family: var(--font-mono); font-size: 0.78rem; color: var(--slate); white-space: nowrap; }
+@media (max-width: 600px) { .notes-item { flex-direction: column; align-items: flex-start; } }
+
+/* ==========================================================
    BLOG
    ========================================================== */
 .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }

@@ -53,6 +53,56 @@ export const batches = [
   },
 ]
 
+// Notes & YT videos, organised subject-wise.
+// EDIT ME: replace `youtubeId` with your real YouTube video ID for that
+// subject's lecture (the part after "v=" in the YouTube URL,
+// e.g. for https://www.youtube.com/watch?v=dQw4w9WgXcQ the id is "dQw4w9WgXcQ").
+// For each note, `link` should point to a PDF placed in public/notes/
+// (e.g. put the file at public/notes/physics-ch1.pdf and set
+// link: "/notes/physics-ch1.pdf"). Leave link: "" to hide the download button.
+export const subjects = [
+  {
+    id: "physics",
+    name: "Physics",
+    batch: "Class 11 & 12 — Science",
+    youtubeId: "", // EDIT ME: e.g. "dQw4w9WgXcQ"
+    notes: [
+      { title: "Chapter 1 — Units & Measurements", desc: "Complete notes with solved examples.", link: "" },
+      { title: "Chapter 2 — Motion in a Straight Line", desc: "Formulas, graphs & practice questions.", link: "" },
+    ],
+  },
+  {
+    id: "chemistry",
+    name: "Chemistry",
+    batch: "Class 11 & 12 — Science",
+    youtubeId: "",
+    notes: [
+      { title: "Organic Chemistry Basics", desc: "Nomenclature & reaction mechanisms.", link: "" },
+      { title: "Periodic Table & Trends", desc: "Quick-revision notes with diagrams.", link: "" },
+    ],
+  },
+  {
+    id: "mathematics",
+    name: "Mathematics",
+    batch: "Class 11 & 12 — Science",
+    youtubeId: "",
+    notes: [
+      { title: "Trigonometry Formula Sheet", desc: "All identities in one page.", link: "" },
+      { title: "Sets, Relations & Functions", desc: "Concept notes + solved problems.", link: "" },
+    ],
+  },
+  {
+    id: "reasoning-ga",
+    name: "Reasoning & GA",
+    batch: "Government Exam Preparation",
+    youtubeId: "",
+    notes: [
+      { title: "Reasoning Shortcuts", desc: "Time-saving tricks for SSC/Banking exams.", link: "" },
+      { title: "Current Affairs Digest", desc: "Monthly GK/GA compilation.", link: "" },
+    ],
+  },
+]
+
 export const faculty = [
   { initials: "PS", name: "Prof. — Physics", detail: "M.Sc. Physics · 10+ years teaching Class 11-12 & competitive exam physics." },
   { initials: "CM", name: "Prof. — Chemistry", detail: "M.Sc. Chemistry · Specialist in Organic & Physical Chemistry for boards." },
