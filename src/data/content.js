@@ -412,8 +412,8 @@ export const galleryItems = [
   {
     type: "video",
     label: "Teaching Demo",
-    caption: "A short teaching clip from one of our classes",
-    src: "/videos/teaching-demo.mp4", // EDIT ME: put your real video file at public/videos/teaching-demo.mp4
+    caption: "Watch our classroom teaching demo",
+    youtubeId: "2J1czXAhbZI", // EDIT ME: put your real video file at public/videos/teaching-demo.mp4
     poster: "", // optional: path to a thumbnail image, e.g. "/videos/teaching-demo-poster.jpg"
   },
   { type: "image", label: "Result Day", caption: "Rank card distribution, March 2026", src: "/result-day.jpg" },
