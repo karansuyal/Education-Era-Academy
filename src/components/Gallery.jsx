@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { galleryItems } from '../data/content'
+import {useState} from "react";
+import {galleryItems} from "../data/content";
 
 export default function Gallery() {
-  const [active, setActive] = useState(null)
+  const [active, setActive] = useState(null);
 
   return (
     <section className="section-pad bg-cream" id="gallery">
@@ -14,17 +14,42 @@ export default function Gallery() {
           {galleryItems.map((item, i) => (
             <button
               key={i}
-              className={`gallery-tile ${item.type === 'video' ? 'video-tile' : ''}`}
+              className={`gallery-tile ${item.type === "video" ? "video-tile" : ""}`}
               onClick={() => setActive(item)}
             >
-              {item.type === 'image' && item.src && (
+              {item.type === "image" && item.src && (
                 <img
                   src={item.src}
                   alt={item.label}
-                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', background: 'rgba(0,0,0,0.15)' }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    background: "rgba(0,0,0,0.15)",
+                  }}
                 />
               )}
-              <span className="tile-label" style={{ position: 'relative', zIndex: 1 }}>{item.label}</span>
+              {item.type === "video" && item.youtubeId && (
+                <img
+                  src={`https://img.youtube.com/vi/${item.youtubeId}/hqdefault.jpg`}
+                  alt={item.label}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+              <span
+                className="tile-label"
+                style={{position: "relative", zIndex: 1}}
+              >
+                {item.label}
+              </span>
             </button>
           ))}
         </div>
@@ -35,19 +60,25 @@ export default function Gallery() {
       {active && (
         <div className="lightbox-overlay" onClick={() => setActive(null)}>
           <div className="lightbox-box" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-close" onClick={() => setActive(null)} aria-label="Close">×</button>
+            <button
+              className="lightbox-close"
+              onClick={() => setActive(null)}
+              aria-label="Close"
+            >
+              ×
+            </button>
             <div className="lightbox-media">
-              {active.type === 'video' && active.src ? (
+              {active.type === "video" && active.src ? (
                 <video
                   src={active.src}
                   poster={active.poster || undefined}
                   controls
                   autoPlay
-                  style={{ width: '100%', height: '100%' }}
+                  style={{width: "100%", height: "100%"}}
                 >
                   Your browser doesn't support video playback.
                 </video>
-              ) : active.type === 'video' && active.youtubeId ? (
+              ) : active.type === "video" && active.youtubeId ? (
                 <iframe
                   src={`https://www.youtube.com/embed/${active.youtubeId}`}
                   title={active.label}
@@ -57,10 +88,12 @@ export default function Gallery() {
                 <img
                   src={active.src}
                   alt={active.label}
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  style={{width: "100%", height: "100%", objectFit: "contain"}}
                 />
               ) : (
-                <span>Photo placeholder — add a real image for "{active.label}"</span>
+                <span>
+                  Photo placeholder — add a real image for "{active.label}"
+                </span>
               )}
             </div>
             <h4>{active.label}</h4>
@@ -69,5 +102,5 @@ export default function Gallery() {
         </div>
       )}
     </section>
-  )
+  );
 }
