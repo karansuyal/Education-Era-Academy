@@ -47,7 +47,7 @@ export const batches = [
   {
     code: "BATCH / GOVT-EXAM",
     title: "Government Exam Preparation",
-    desc: "SSC/CGL, Army(Agniveer,Airforce), Railways, State PSC — reasoning, quant, GK & English.",
+    desc: "SSC/CGL, Army(Agniveer,Airforce), State PSC — reasoning, quant, GK & English.",
     meta: ["Morning & evening slots", "Mock tests every week"],
     featured: false,
   },
