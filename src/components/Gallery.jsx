@@ -17,14 +17,19 @@ export default function Gallery() {
               className={`gallery-tile ${item.type === 'video' ? 'video-tile' : ''}`}
               onClick={() => setActive(item)}
             >
-              <span className="tile-label">{item.label}</span>
+              {item.type === 'image' && item.src && (
+                <img
+                  src={item.src}
+                  alt={item.label}
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              )}
+              <span className="tile-label" style={{ position: 'relative', zIndex: 1 }}>{item.label}</span>
             </button>
           ))}
         </div>
-        {/* EDIT ME: each tile is a plain gradient placeholder right now.
-            Swap the button's background for a real photo by adding an
-            <img> inside .gallery-tile once you have real photos, and
-            set a real youtubeId for the video tile in data/content.js */}
+        {/* Images now load from the "src" path set on each item in src/data/content.js.
+            Just drop your photo files into public/images/gallery/ with matching filenames. */}
       </div>
 
       {active && (
@@ -47,6 +52,12 @@ export default function Gallery() {
                   src={`https://www.youtube.com/embed/${active.youtubeId}`}
                   title={active.label}
                   allowFullScreen
+                />
+              ) : active.src ? (
+                <img
+                  src={active.src}
+                  alt={active.label}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               ) : (
                 <span>Photo placeholder — add a real image for "{active.label}"</span>
