@@ -112,31 +112,9 @@ export const faqs = [
     a: "Yes, fees can be split into monthly installments — see the Fees section below for details.",
   },
   {
-  q: "Do you offer online classes?",
-  a: (
-    <>
-      <p>
-        Yes. All recorded classes are uploaded to our official YouTube channel,
-        allowing students to learn anytime, anywhere and revise lessons whenever
-        needed.
-      </p>
-
-      <br />
-
-      <p>
-        📺 <strong>YouTube Channel:</strong>{" "}
-        <a
-          href="https://youtube.com/@educationera1291"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-red-600 hover:underline font-semibold"
-        >
-          Education Era
-        </a>
-      </p>
-    </>
-  ),
-},
+    q: "Do you offer online classes?",
+    a: "Yes. All recorded classes are uploaded to our official YouTube channel, allowing students to learn anytime, anywhere and revise lessons whenever needed.\n\n📺 YouTube Channel: Education Era\n🔗 https://youtube.com/@educationera1291",
+  },
 ]
 
 export const feePlans = [

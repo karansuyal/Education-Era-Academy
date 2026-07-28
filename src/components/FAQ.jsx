@@ -20,7 +20,23 @@ export default function FAQ() {
                 <span className="faq-icon">{openIndex === i ? '−' : '+'}</span>
               </button>
               <div className="faq-answer">
-                {typeof f.a === "string" ? <p>{f.a}</p> : f.a}
+                <p className="whitespace-pre-line">
+  {f.a}
+
+  {f.q === "Do you offer online classes?" && (
+    <>
+      <br />
+      <a
+        href="https://youtube.com/@educationera1291"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-red-600 font-semibold hover:underline"
+      >
+        Visit our YouTube Channel →
+      </a>
+    </>
+  )}
+</p>
               </div>
             </div>
           ))}
