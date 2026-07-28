@@ -182,7 +182,7 @@ section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); max-width: 24ch; margin-bott
    GALLERY
    ========================================================== */
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.gallery-tile { position: relative; border-radius: 6px; overflow: hidden; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--ink) 0%, #2a4d3d 100%); display: flex; align-items: flex-end; cursor: pointer; border: none; padding: 0; width: 100%; text-align: left; }
+.gallery-tile { position: relative; border-radius: 6px; overflow: hidden; aspect-ratio: 3/2; background: linear-gradient(135deg, var(--ink) 0%, #2a4d3d 100%); display: flex; align-items: flex-end; cursor: pointer; border: none; padding: 0; width: 100%; text-align: left; }
 .gallery-tile .tile-label { position: relative; z-index: 1; color: var(--chalk); font-family: var(--font-display); font-weight: 600; padding: 16px; font-size: 0.95rem; }
 .gallery-tile .tile-caption { position: relative; z-index: 1; color: rgba(245,240,227,0.7); font-size: 0.78rem; padding: 0 16px 14px; margin-top: -10px; }
 .gallery-tile.video-tile::before {
