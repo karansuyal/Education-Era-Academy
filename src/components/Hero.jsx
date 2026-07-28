@@ -8,8 +8,8 @@ export default function Hero() {
           <p className="eyebrow">Admissions Open · Batch 2026</p>
           <h1>Foundation to <span className="hl">Final Rank.</span></h1>
           <p className="hero-sub">
-            Classroom coaching for Class 9–12 (Science &amp; Commerce) and full-time
-            Government Exam preparation — SSC, Banking, Railways &amp; State PSC.
+            Classroom coaching for Class 9–12 (Science) and full-time
+            Government Exam preparation — SSC, GD, Agniveer &amp; Airforce.
             Small batches, doubt-clearing every evening, results you can check.
           </p>
           <div className="hero-actions">

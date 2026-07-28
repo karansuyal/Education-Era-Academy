@@ -18,8 +18,8 @@ export const siteInfo = {
 
 export const stats = [
   { num: "1,200+", label: "students mentored" },
-  { num: "86%", label: "selection / improvement rate" },
-  { num: "9", label: "years teaching in Rudrapur" },
+  { num: "90%", label: "selection / improvement rate" },
+  { num: "10", label: "years teaching in Rudrapur" },
 ]
 
 export const whyPoints = [
@@ -40,7 +40,7 @@ export const batches = [
   {
     code: "BATCH / SCI-11-12",
     title: "Class 11 & 12 — Science (PCM/PCB)",
-    desc: "Physics, Chemistry, Maths/Biology aligned to boards with competitive-exam problem solving built in.",
+    desc: "Maths, Physics, Chemistry, aligned to boards with competitive-exam problem solving built in.",
     meta: ["Mon–Sat · 2 hrs/day", "Board + entrance pattern"],
     featured: true,
   },
