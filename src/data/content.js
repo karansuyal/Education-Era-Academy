@@ -404,11 +404,11 @@ export const testimonials = [
 // (You can still use youtubeId instead of src if you ever want to embed
 // a YouTube video — src takes priority if both are set.)
 export const galleryItems = [
-  // EDIT ME: put your real photo files inside public/images/gallery/ using these exact
-  // filenames (or change the "src" path below to match whatever names you used).
-  { type: "image", label: "Classroom", caption: "Main classroom, Batch SCI-11-12", src: "/images/gallery/classroom.jpg" },
-  { type: "image", label: "Library", caption: "Reference library & reading room", src: "/images/gallery/library.jpg" },
-  { type: "image", label: "Lab", caption: "Science practical lab", src: "/images/gallery/lab.jpg" },
+  // EDIT ME: put your real photo files directly inside the public/ folder using these
+  // exact filenames (or change the "src" path below to match whatever names you used).
+  { type: "image", label: "Classroom", caption: "Main classroom, Batch SCI-11-12", src: "/classroom.jpg" },
+  { type: "image", label: "Library", caption: "Reference library & reading room", src: "/library.jpg" },
+  { type: "image", label: "Lab", caption: "Science practical lab", src: "/lab.jpg" },
   {
     type: "video",
     label: "Teaching Demo",
@@ -416,8 +416,8 @@ export const galleryItems = [
     src: "/videos/teaching-demo.mp4", // EDIT ME: put your real video file at public/videos/teaching-demo.mp4
     poster: "", // optional: path to a thumbnail image, e.g. "/videos/teaching-demo-poster.jpg"
   },
-  { type: "image", label: "Result Day", caption: "Rank card distribution, March 2026", src: "/images/gallery/result-day.jpg" },
-  { type: "image", label: "Doubt Session", caption: "Evening doubt-clearing in progress", src: "/images/gallery/doubt-session.jpg" },
+  { type: "image", label: "Result Day", caption: "Rank card distribution, March 2026", src: "/result-day.jpg" },
+  { type: "image", label: "Doubt Session", caption: "Evening doubt-clearing in progress", src: "/doubt-session.jpg" },
 ]
 
 export const faqs = [
