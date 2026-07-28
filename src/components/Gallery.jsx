@@ -21,7 +21,7 @@ export default function Gallery() {
                 <img
                   src={item.src}
                   alt={item.label}
-                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', background: 'rgba(0,0,0,0.15)' }}
                 />
               )}
               <span className="tile-label" style={{ position: 'relative', zIndex: 1 }}>{item.label}</span>
