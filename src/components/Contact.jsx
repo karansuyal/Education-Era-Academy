@@ -49,7 +49,7 @@ export default function Contact() {
         <form className="enquiry-form" onSubmit={handleSubmit}>
           <label>
             Full name
-            <input type="text" name="name" required value={form.name} onChange={handleChange} placeholder="e.g. Aarav Sharma" />
+            <input type="text" name="name" required value={form.name} onChange={handleChange} placeholder="e.g. Karan Suyal" />
           </label>
           <label>
             Phone number
