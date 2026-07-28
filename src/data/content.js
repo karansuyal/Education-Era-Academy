@@ -120,21 +120,21 @@ export const faqs = [
 export const feePlans = [
   {
     name: "Foundation — Class 9 & 10",
-    priceFull: "₹18,000",
-    priceEmi: "₹2,000 x 9 months",
+    priceFull: "₹12,000",
+    priceEmi: "₹1,000 x 12 months",
     includes: ["All subjects", "Printed study material", "Weekly tests"],
   },
   {
     name: "Class 11 & 12 — Science",
-    priceFull: "₹32,000",
-    priceEmi: "₹3,300 x 10 months",
+    priceFull: "₹18,000",
+    priceEmi: "₹1,500 x 12 months",
     includes: ["PCM/PCB full syllabus", "Entrance-pattern practice", "Doubt sessions"],
     featured: true,
   },
   {
     name: "Government Exam Prep",
-    priceFull: "₹15,000",
-    priceEmi: "₹2,500 x 6 months",
+    priceFull: "₹6,000",
+    priceEmi: "₹1,000 x 6 months",
     includes: ["Reasoning + Quant + GK + English", "Weekly mock tests", "Previous year papers"],
   },
 ]
