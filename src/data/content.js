@@ -174,7 +174,7 @@ export const classesData = [
         name: "Mathematics",
         youtubeId: "",
         chapters: mkChapters([
-          { title: "Real Numbers", youtubeId: "o50238vc4FA" },
+          { title: "Real Numbers", youtubeId: "o50238vc4FA", notes: [{ title: "Real Numbers Notes (PDF)", link: "/notes/real-numbers.pdf" }] },
           "Polynomials",
           "Pair of Linear Equations in Two Variables",
           "Quadratic Equations",
