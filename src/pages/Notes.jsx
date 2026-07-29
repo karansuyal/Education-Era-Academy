@@ -1,7 +1,13 @@
 import { useState } from 'react'
-import { classesData } from '../data/content'
+import { classesData, siteInfo } from '../data/content'
+import usePageMeta from '../utils/usePageMeta'
 
 export default function Notes() {
+  usePageMeta(
+    `Notes & Video Lectures — Class 9 to 12 & Govt Exam | ${siteInfo.name}`,
+    'Free chapter-wise notes and YouTube video lectures for Class 9, 10, 11, 12 (Maths, Physics, Chemistry, Biology) and Government Exam preparation.'
+  )
+
   const [classId, setClassId] = useState(classesData[0]?.id)
   const activeClass = classesData.find((c) => c.id === classId) || classesData[0]
 

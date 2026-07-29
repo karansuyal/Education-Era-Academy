@@ -1,7 +1,13 @@
 import { Link } from 'react-router-dom'
-import { blogPosts } from '../data/content'
+import { blogPosts, siteInfo } from '../data/content'
+import usePageMeta from '../utils/usePageMeta'
 
 export default function Blog() {
+  usePageMeta(
+    `Blog & Announcements | ${siteInfo.name} ${siteInfo.nameSuffix}`,
+    'Latest announcements, admission updates and result highlights from Education Era Academy, Rudrapur.'
+  )
+
   const sorted = [...blogPosts].sort((a, b) => new Date(b.date) - new Date(a.date))
 
   return (

@@ -1,9 +1,15 @@
 import { Link, useParams } from 'react-router-dom'
-import { blogPosts } from '../data/content'
+import { blogPosts, siteInfo } from '../data/content'
+import usePageMeta from '../utils/usePageMeta'
 
 export default function BlogPost() {
   const { postId } = useParams()
   const post = blogPosts.find((p) => p.id === postId)
+
+  usePageMeta(
+    post ? `${post.title} | ${siteInfo.name} ${siteInfo.nameSuffix}` : `Post not found | ${siteInfo.name}`,
+    post ? post.excerpt : undefined
+  )
 
   if (!post) {
     return (

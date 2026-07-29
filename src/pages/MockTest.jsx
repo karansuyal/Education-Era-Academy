@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { quizQuestions, siteInfo } from '../data/content'
+import usePageMeta from '../utils/usePageMeta'
 
 export default function MockTest() {
+  usePageMeta(
+    `Free Mock Test | ${siteInfo.name} ${siteInfo.nameSuffix}`,
+    'Attempt a free mock test — practice questions for board exams and government exam preparation.'
+  )
+
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState({})
   const [showAnswer, setShowAnswer] = useState(false)
