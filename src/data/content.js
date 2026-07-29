@@ -70,12 +70,29 @@ export const batches = [
 //     notes: [{ title: "Chapter Notes (PDF)", link: "/notes/physics-ch1.pdf" }]
 //   Put the actual PDF file inside the public/notes/ folder with that
 //   same filename. Leave notes: [] to show "Notes coming soon".
+//
+// HOW TO ADD a video/notes to ONE chapter without rewriting the list:
+// every chapters array below is created with mkChapters([...]). Most
+// entries are just a plain title string — swap ANY single string for
+// an object to fill in that chapter's video/notes, e.g.:
+//     mkChapters([
+//       "Motion",
+//       { title: "Gravitation", youtubeId: "dQw4w9WgXcQ",
+//         notes: [{ title: "Gravitation Notes (PDF)", link: "/notes/physics-ch3.pdf" }] },
+//       "Work and Energy",
+//     ])
 // ============================================================
 
 // helper so we don't have to repeat { id, title, notes: [], youtubeId: '' }
-// for every single chapter by hand
-const mkChapters = (titles) =>
-  titles.map((title, i) => ({ id: `ch-${i + 1}`, title, youtubeId: "", notes: [] }))
+// for every single chapter by hand. Pass a plain string for a chapter
+// with no video/notes yet, or an object { title, youtubeId, notes } to
+// fill those in for that one chapter.
+const mkChapters = (items) =>
+  items.map((item, i) => {
+    const base = { id: `ch-${i + 1}`, youtubeId: "", notes: [] }
+    if (typeof item === "string") return { ...base, title: item }
+    return { ...base, ...item }
+  })
 
 export const classesData = [
   {
