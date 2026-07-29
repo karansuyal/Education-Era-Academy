@@ -16,6 +16,18 @@ export const siteInfo = {
   mapEmbedUrl: "", // paste a Google Maps embed src URL here to show a map
 }
 
+// EDIT ME: your YouTube channel details, shown in the "YouTube Channel"
+// section on the homepage. channelId is used to auto-embed your latest
+// uploads (no API key needed) — to update it, open your channel page,
+// view source/share, and look for "channelId":"UC...".
+export const youtubeChannel = {
+  name: "Education Era",
+  handle: "@educationera1291",
+  url: "https://youtube.com/@educationera1291?si=v6vCQcgVUaWRXtDb",
+  channelId: "UCZdVSVL2PofSdaFnLcsLdtQ",
+  description: "Free lectures, chapter revisions & exam tips — subscribe so you never miss a new video.",
+}
+
 export const stats = [
   { num: "1,200+", label: "students mentored" },
   { num: "90%", label: "selection / improvement rate" },

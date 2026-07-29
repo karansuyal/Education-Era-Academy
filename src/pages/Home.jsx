@@ -3,6 +3,7 @@ import Why from '../components/Why'
 import Courses from '../components/Courses'
 import Faculty from '../components/Faculty'
 import Gallery from '../components/Gallery'
+import YouTubeChannel from '../components/YouTubeChannel'
 import Results from '../components/Results'
 import FAQ from '../components/FAQ'
 import Fees from '../components/Fees'
@@ -17,6 +18,7 @@ export default function Home() {
       <Courses />
       <Faculty />
       <Gallery />
+      <YouTubeChannel />
       <Results />
       <FAQ />
       <Fees />
