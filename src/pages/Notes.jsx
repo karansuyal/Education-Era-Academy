@@ -1,9 +1,20 @@
 import { useState } from 'react'
-import { subjects } from '../data/content'
+import { classesData } from '../data/content'
 
 export default function Notes() {
-  const [activeId, setActiveId] = useState(subjects[0]?.id)
-  const active = subjects.find((s) => s.id === activeId) || subjects[0]
+  const [classId, setClassId] = useState(classesData[0]?.id)
+  const activeClass = classesData.find((c) => c.id === classId) || classesData[0]
+
+  const [subjectId, setSubjectId] = useState(activeClass?.subjects[0]?.id)
+  const activeSubject =
+    activeClass?.subjects.find((s) => s.id === subjectId) || activeClass?.subjects[0]
+
+  const [videoChapter, setVideoChapter] = useState(null) // chapter currently open in the video lightbox
+
+  const handleClassChange = (cls) => {
+    setClassId(cls.id)
+    setSubjectId(cls.subjects[0]?.id) // reset to that class's first subject
+  }
 
   return (
     <section className="section-pad bg-chalk" style={{ minHeight: '60vh' }}>
@@ -11,62 +22,98 @@ export default function Notes() {
         <p className="section-eyebrow">Study Material</p>
         <h2>Notes &amp; subject videos.</h2>
 
+        {/* LEVEL 1 — Class / exam tabs */}
         <div className="notes-tabs">
-          {subjects.map((s) => (
+          {classesData.map((cls) => (
             <button
-              key={s.id}
-              className={`notes-tab ${s.id === active?.id ? 'active' : ''}`}
-              onClick={() => setActiveId(s.id)}
+              key={cls.id}
+              className={`notes-tab ${cls.id === activeClass?.id ? 'active' : ''}`}
+              onClick={() => handleClassChange(cls)}
             >
-              {s.name}
+              {cls.label}
             </button>
           ))}
         </div>
 
-        {active && (
+        {/* LEVEL 2 — Subject tabs for the selected class */}
+        {activeClass && (
+          <div className="notes-tabs notes-tabs-sub">
+            {activeClass.subjects.map((sub) => (
+              <button
+                key={sub.id}
+                className={`notes-tab notes-tab-sub ${sub.id === activeSubject?.id ? 'active' : ''}`}
+                onClick={() => setSubjectId(sub.id)}
+              >
+                {sub.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* LEVEL 3 — Chapters for the selected subject, each with its own video + notes */}
+        {activeSubject && (
           <div className="notes-panel">
             <div className="notes-panel-header">
-              <h3>{active.name}</h3>
-              <span className="notes-batch-tag">{active.batch}</span>
-            </div>
-
-            <div className="notes-video-wrap">
-              {active.youtubeId ? (
-                <iframe
-                  src={`https://www.youtube.com/embed/${active.youtubeId}`}
-                  title={`${active.name} — YouTube video`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              ) : (
-                <div className="notes-video-placeholder">
-                  Video coming soon for {active.name}.
-                  <br />
-                  <small>(Add a YouTube video ID for "{active.id}" in src/data/content.js)</small>
-                </div>
-              )}
+              <h3>{activeSubject.name}</h3>
+              <span className="notes-batch-tag">{activeClass.label}</span>
             </div>
 
             <ul className="notes-list">
-              {active.notes.map((n) => (
-                <li className="notes-item" key={n.title}>
+              {activeSubject.chapters.map((ch) => (
+                <li className="notes-item" key={ch.id}>
                   <div>
-                    <h4>{n.title}</h4>
-                    <p>{n.desc}</p>
+                    <h4>{ch.title}</h4>
                   </div>
-                  {n.link ? (
-                    <a href={n.link} className="btn btn-outline" download>
-                      Download
-                    </a>
-                  ) : (
-                    <span className="notes-soon">Coming soon</span>
-                  )}
+
+                  <div className="notes-item-actions">
+                    {ch.youtubeId ? (
+                      <button className="btn btn-outline" onClick={() => setVideoChapter(ch)}>
+                        Watch Video
+                      </button>
+                    ) : (
+                      <span className="notes-soon">Video coming soon</span>
+                    )}
+
+                    {ch.notes && ch.notes.length > 0 ? (
+                      ch.notes.map((note, i) => (
+                        <a key={i} href={note.link} className="btn btn-outline" download>
+                          {note.title || 'Download Notes'}
+                        </a>
+                      ))
+                    ) : (
+                      <span className="notes-soon">Notes coming soon</span>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
           </div>
         )}
       </div>
+
+      {/* Video lightbox — opens when a chapter's "Watch Video" is clicked */}
+      {videoChapter && (
+        <div className="lightbox-overlay" onClick={() => setVideoChapter(null)}>
+          <div className="lightbox-box" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="lightbox-close"
+              onClick={() => setVideoChapter(null)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <div className="lightbox-media">
+              <iframe
+                src={`https://www.youtube.com/embed/${videoChapter.youtubeId}`}
+                title={videoChapter.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <h4>{videoChapter.title}</h4>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

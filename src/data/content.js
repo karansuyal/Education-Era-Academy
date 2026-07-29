@@ -61,14 +61,15 @@ export const batches = [
 //   "rationalized" textbooks year by year — if your session's book has
 //   different chapter names/order, just edit the `title` values below,
 //   the structure will keep working exactly the same.
+// - Each CHAPTER has its own `youtubeId` and `notes` — set them directly
+//   on the chapter, that's what the Notes page reads and shows.
 // - `youtubeId` = the part after "v=" in a YouTube URL
 //   (e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ -> "dQw4w9WgXcQ").
-//   You can set one video per subject, or per chapter if you want to be
-//   more specific — both fields exist below.
-// - For each note, `link` should point to a PDF placed in public/notes/
-//   (e.g. put the file at public/notes/physics-ch1.pdf and set
-//   link: "/notes/physics-ch1.pdf"). Leave link: "" to hide the
-//   download button and show "Coming soon" instead.
+//   Leave "" to show "Video coming soon" for that chapter.
+// - `notes` is a list of PDFs for that chapter — add one or more like:
+//     notes: [{ title: "Chapter Notes (PDF)", link: "/notes/physics-ch1.pdf" }]
+//   Put the actual PDF file inside the public/notes/ folder with that
+//   same filename. Leave notes: [] to show "Notes coming soon".
 // ============================================================
 
 // helper so we don't have to repeat { id, title, notes: [], youtubeId: '' }
@@ -101,21 +102,35 @@ export const classesData = [
         ]),
       },
       {
-        id: "class-9-science",
-        name: "Science",
+        id: "class-9-physics",
+        name: "Physics",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Motion",
+          "Force and Laws of Motion",
+          "Gravitation",
+          "Work and Energy",
+          "Sound",
+        ]),
+      },
+      {
+        id: "class-9-chemistry",
+        name: "Chemistry",
         youtubeId: "",
         chapters: mkChapters([
           "Matter in Our Surroundings",
           "Is Matter Around Us Pure",
           "Atoms and Molecules",
           "Structure of the Atom",
+        ]),
+      },
+      {
+        id: "class-9-biology",
+        name: "Biology",
+        youtubeId: "",
+        chapters: mkChapters([
           "The Fundamental Unit of Life",
           "Tissues",
-          "Motion",
-          "Force and Laws of Motion",
-          "Gravitation",
-          "Work and Energy",
-          "Sound",
           "Improvement in Food Resources",
         ]),
       },
@@ -147,22 +162,36 @@ export const classesData = [
         ]),
       },
       {
-        id: "class-10-science",
-        name: "Science",
+        id: "class-10-physics",
+        name: "Physics",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Light — Reflection and Refraction",
+          "The Human Eye and the Colourful World",
+          "Electricity",
+          "Magnetic Effects of Electric Current",
+        ]),
+      },
+      {
+        id: "class-10-chemistry",
+        name: "Chemistry",
         youtubeId: "",
         chapters: mkChapters([
           "Chemical Reactions and Equations",
           "Acids, Bases and Salts",
           "Metals and Non-metals",
           "Carbon and its Compounds",
+        ]),
+      },
+      {
+        id: "class-10-biology",
+        name: "Biology",
+        youtubeId: "",
+        chapters: mkChapters([
           "Life Processes",
           "Control and Coordination",
           "How do Organisms Reproduce?",
           "Heredity and Evolution",
-          "Light — Reflection and Refraction",
-          "The Human Eye and the Colourful World",
-          "Electricity",
-          "Magnetic Effects of Electric Current",
           "Our Environment",
         ]),
       },
@@ -232,6 +261,31 @@ export const classesData = [
           "Hydrocarbons",
         ]),
       },
+      {
+        id: "class-11-biology",
+        name: "Biology",
+        youtubeId: "",
+        chapters: mkChapters([
+          "The Living World",
+          "Biological Classification",
+          "Plant Kingdom",
+          "Animal Kingdom",
+          "Morphology of Flowering Plants",
+          "Anatomy of Flowering Plants",
+          "Cell: The Unit of Life",
+          "Biomolecules",
+          "Cell Cycle and Cell Division",
+          "Transport in Plants",
+          "Mineral Nutrition",
+          "Photosynthesis in Higher Plants",
+          "Respiration in Plants",
+          "Plant Growth and Development",
+          "Body Fluids and Circulation",
+          "Excretory Products and their Elimination",
+          "Locomotion and Movement",
+          "Neural Control and Coordination",
+        ]),
+      },
     ],
   },
   {
@@ -298,6 +352,26 @@ export const classesData = [
           "Biomolecules",
         ]),
       },
+      {
+        id: "class-12-biology",
+        name: "Biology",
+        youtubeId: "",
+        chapters: mkChapters([
+          "Sexual Reproduction in Flowering Plants",
+          "Human Reproduction",
+          "Reproductive Health",
+          "Principles of Inheritance and Variation",
+          "Molecular Basis of Inheritance",
+          "Evolution",
+          "Human Health and Disease",
+          "Microbes in Human Welfare",
+          "Biotechnology: Principles and Processes",
+          "Biotechnology and its Applications",
+          "Organisms and Populations",
+          "Ecosystem",
+          "Biodiversity and Conservation",
+        ]),
+      },
     ],
   },
   {
@@ -359,23 +433,6 @@ export const classesData = [
     ],
   },
 ]
-
-// Flat subject list for the Notes page (Notes.jsx needs { id, name, batch, youtubeId, notes }).
-// Auto-built from classesData above so you don't have to maintain two copies —
-// edit chapter titles/links in classesData and this stays in sync.
-export const subjects = classesData.flatMap((cls) =>
-  cls.subjects.map((sub) => ({
-    id: sub.id,
-    name: sub.name,
-    batch: cls.label,
-    youtubeId: sub.youtubeId || "",
-    notes: sub.chapters.map((ch) => ({
-      title: ch.title,
-      desc: "Chapter notes", // EDIT ME: add a real description if you want
-      link: "", // EDIT ME: add a PDF/download link to show a "Download" button instead of "Coming soon"
-    })),
-  }))
-)
 
 export const faculty = [
   { initials: "PS", name: "Prof. — Physics", detail: "M.Sc. Physics · 10+ years teaching Class 11-12 & competitive exam physics." },
