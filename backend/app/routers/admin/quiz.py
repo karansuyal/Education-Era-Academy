@@ -5,7 +5,7 @@ from app.core.crud_factory import build_crud_router
 from app.core.database import get_db
 from app.core.deps import get_current_admin
 from app.models.quiz import Attempt, MockTest, Question
-from app.schemas.admin_quiz import (
+from backend.app.schemas.admin_quiz import (
     AttemptOut,
     LeaderboardEntryOut,
     MockTestCreate,

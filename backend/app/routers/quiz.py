@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.models.quiz import Attempt, AttemptAnswer, MockTest, Question
-from app.schemas.quiz import (
+from backend.app.schemas.admin_quiz import (
     MockTestDetailOut,
     MockTestListItemOut,
     PublicLeaderboardEntryOut,

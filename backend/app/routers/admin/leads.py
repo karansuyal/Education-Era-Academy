@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.deps import get_current_admin
 from app.models.lead import ContactLead
-from app.schemas.admin_leads import ContactLeadOut, ContactLeadUpdate
+from backend.app.schemas.admin_leads import ContactLeadOut, ContactLeadUpdate
 
 router = APIRouter(prefix="/admin/leads", tags=["admin:leads"])
 
