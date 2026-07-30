@@ -7,8 +7,9 @@ import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import MockTest from './pages/MockTest'
 import Notes from './pages/Notes'
+import AdminApp from './admin/AdminApp'
 
-export default function App() {
+function PublicSite() {
   return (
     <>
       <Header />
@@ -22,5 +23,14 @@ export default function App() {
       <Footer />
       <StickyWhatsapp />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/admin/*" element={<AdminApp />} />
+      <Route path="/*" element={<PublicSite />} />
+    </Routes>
   )
 }
