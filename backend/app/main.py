@@ -17,15 +17,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from app.routers import auth
+from app.routers import academics, auth, public, quiz
+from app.routers.admin import academics as admin_academics
+from app.routers.admin import content as admin_content
+from app.routers.admin import leads as admin_leads
+from app.routers.admin import quiz as admin_quiz
 
 app.include_router(auth.router)
+app.include_router(public.router)
+app.include_router(academics.router)
+app.include_router(quiz.router)
+app.include_router(admin_content.router)
+app.include_router(admin_academics.router)
+app.include_router(admin_quiz.router)
+app.include_router(admin_leads.router)
 
 # Remaining routers are added here as they're built
-# from app.routers import public, academics, quiz, contact
-# app.include_router(public.router)
-# app.include_router(academics.router)
-# app.include_router(quiz.router)
+# from app.routers import contact
 # app.include_router(contact.router)
 
 
