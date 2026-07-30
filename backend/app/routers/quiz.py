@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
+from app.core.limiter import limiter
 from app.models.quiz import Attempt, AttemptAnswer, MockTest, Question
 from app.schemas.quiz import (
     MockTestDetailOut,
@@ -46,7 +47,8 @@ def get_mock_test(mock_test_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/mock-tests/{mock_test_id}/submit", response_model=SubmitAttemptOut)
-def submit_attempt(mock_test_id: int, payload: SubmitAttemptIn, db: Session = Depends(get_db)):
+@limiter.limit("20/hour")
+def submit_attempt(request: Request, mock_test_id: int, payload: SubmitAttemptIn, db: Session = Depends(get_db)):
     test = (
         db.query(MockTest)
         .options(selectinload(MockTest.questions))
