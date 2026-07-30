@@ -1,6 +1,8 @@
-import { faculty } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Faculty() {
+  const { faculty } = useSiteData()
+
   return (
     <section className="section-pad bg-chalk" id="faculty">
       <div className="wrap">

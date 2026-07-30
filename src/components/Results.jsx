@@ -1,6 +1,8 @@
-import { results } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Results() {
+  const { results } = useSiteData()
+
   return (
     <section className="section-pad bg-ink" id="results">
       <div className="wrap">

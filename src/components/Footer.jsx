@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
-import { siteInfo } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Footer() {
+  const { siteInfo } = useSiteData()
+
   return (
     <footer className="site-footer">
       <div className="wrap footer-inner">

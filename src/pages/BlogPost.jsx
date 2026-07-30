@@ -1,17 +1,43 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { blogPosts, siteInfo } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
+import { getBlogPost } from '../api/client'
 import usePageMeta from '../utils/usePageMeta'
 
 export default function BlogPost() {
-  const { postId } = useParams()
-  const post = blogPosts.find((p) => p.id === postId)
+  const { siteInfo } = useSiteData()
+  const { postId: slug } = useParams()
+
+  const [post, setPost] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    setNotFound(false)
+    getBlogPost(slug)
+      .then((data) => { if (!cancelled) setPost(data) })
+      .catch(() => { if (!cancelled) setNotFound(true) })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [slug])
 
   usePageMeta(
-    post ? `${post.title} | ${siteInfo.name} ${siteInfo.nameSuffix}` : `Post not found | ${siteInfo.name}`,
+    post ? `${post.title} | ${siteInfo.name} ${siteInfo.nameSuffix}` : `Blog | ${siteInfo.name}`,
     post ? post.excerpt : undefined
   )
 
-  if (!post) {
+  if (loading) {
+    return (
+      <div className="blog-post-page">
+        <Link to="/blog" className="back-link">← Back to Blog</Link>
+        <p>Loading…</p>
+      </div>
+    )
+  }
+
+  if (notFound || !post) {
     return (
       <div className="blog-post-page">
         <Link to="/blog" className="back-link">← Back to Blog</Link>

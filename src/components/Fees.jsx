@@ -1,6 +1,8 @@
-import { feePlans } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Fees() {
+  const { feePlans } = useSiteData()
+
   return (
     <section className="section-pad bg-cream" id="fees">
       <div className="wrap">

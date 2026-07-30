@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { faqs } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function FAQ() {
+  const { faqs } = useSiteData()
   const [openIndex, setOpenIndex] = useState(0)
 
   const toggle = (i) => setOpenIndex(openIndex === i ? -1 : i)

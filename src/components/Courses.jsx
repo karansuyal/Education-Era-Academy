@@ -1,6 +1,8 @@
-import { batches } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Courses() {
+  const { batches } = useSiteData()
+
   return (
     <section className="section-pad bg-cream" id="courses">
       <div className="wrap">

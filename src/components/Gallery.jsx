@@ -1,7 +1,8 @@
-import {useState} from "react";
-import {galleryItems} from "../data/content";
+import { useState } from "react";
+import { useSiteData } from "../context/SiteDataContext";
 
 export default function Gallery() {
+  const { gallery: galleryItems } = useSiteData();
   const [active, setActive] = useState(null);
 
   return (
@@ -53,8 +54,8 @@ export default function Gallery() {
             </button>
           ))}
         </div>
-        {/* Images now load from the "src" path set on each item in src/data/content.js.
-            Just drop your photo files into public/images/gallery/ with matching filenames. */}
+        {/* Images/videos now come from the admin-managed gallery items via
+            GET /public/site-content — add/edit them through the admin API. */}
       </div>
 
       {active && (

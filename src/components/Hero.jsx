@@ -1,6 +1,8 @@
-import { stats } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Hero() {
+  const { stats } = useSiteData()
+
   return (
     <section className="hero" id="top">
       <div className="wrap hero-inner">

@@ -1,25 +1,68 @@
-import { useState } from 'react'
-import { classesData, siteInfo } from '../data/content'
+import { useEffect, useState } from 'react'
+import { useSiteData } from '../context/SiteDataContext'
+import { getAcademics } from '../api/client'
 import usePageMeta from '../utils/usePageMeta'
 
 export default function Notes() {
+  const { siteInfo } = useSiteData()
   usePageMeta(
     `Notes & Video Lectures — Class 9 to 12 & Govt Exam | ${siteInfo.name}`,
     'Free chapter-wise notes and YouTube video lectures for Class 9, 10, 11, 12 (Maths, Physics, Chemistry, Biology) and Government Exam preparation.'
   )
 
-  const [classId, setClassId] = useState(classesData[0]?.id)
-  const activeClass = classesData.find((c) => c.id === classId) || classesData[0]
+  const [classesData, setClassesData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const [subjectId, setSubjectId] = useState(activeClass?.subjects[0]?.id)
+  const [classId, setClassId] = useState(null)
+  const [subjectId, setSubjectId] = useState(null)
+  const [videoChapter, setVideoChapter] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+    getAcademics()
+      .then((data) => {
+        if (cancelled) return
+        setClassesData(data)
+        setClassId(data[0]?.id ?? null)
+        setSubjectId(data[0]?.subjects[0]?.id ?? null)
+      })
+      .catch((err) => { if (!cancelled) setError(err) })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [])
+
+  const activeClass = classesData.find((c) => c.id === classId) || classesData[0]
   const activeSubject =
     activeClass?.subjects.find((s) => s.id === subjectId) || activeClass?.subjects[0]
 
-  const [videoChapter, setVideoChapter] = useState(null) // chapter currently open in the video lightbox
-
   const handleClassChange = (cls) => {
     setClassId(cls.id)
-    setSubjectId(cls.subjects[0]?.id) // reset to that class's first subject
+    setSubjectId(cls.subjects[0]?.id ?? null) // reset to that class's first subject
+  }
+
+  if (loading) {
+    return (
+      <section className="section-pad bg-chalk" style={{ minHeight: '60vh' }}>
+        <div className="wrap">
+          <p className="section-eyebrow">Study Material</p>
+          <h2>Notes &amp; subject videos.</h2>
+          <p>Loading…</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (error || classesData.length === 0) {
+    return (
+      <section className="section-pad bg-chalk" style={{ minHeight: '60vh' }}>
+        <div className="wrap">
+          <p className="section-eyebrow">Study Material</p>
+          <h2>Notes &amp; subject videos.</h2>
+          <p>Couldn't load notes right now — please check back shortly.</p>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -81,8 +124,8 @@ export default function Notes() {
                     )}
 
                     {ch.notes && ch.notes.length > 0 ? (
-                      ch.notes.map((note, i) => (
-                        <a key={i} href={note.link} className="btn btn-outline" download>
+                      ch.notes.map((note) => (
+                        <a key={note.id} href={note.link} className="btn btn-outline" download>
                           {note.title || 'Download Notes'}
                         </a>
                       ))

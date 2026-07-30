@@ -1,6 +1,8 @@
-import { youtubeChannel } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function YouTubeChannel() {
+  const { youtubeChannel } = useSiteData()
+
   // A channel's "uploads" playlist ID is always its channel ID with the
   // leading "UC" swapped for "UU" — YouTube provides this automatically,
   // so the embed below always shows the latest videos, no API key needed.
@@ -54,7 +56,7 @@ export default function YouTubeChannel() {
             />
           ) : (
             <div className="yt-embed-placeholder">
-              Add your channelId in src/data/content.js to show your latest videos here.
+              Add your channel details in the admin panel to show your latest videos here.
             </div>
           )}
         </div>

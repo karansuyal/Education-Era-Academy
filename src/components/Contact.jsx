@@ -1,15 +1,36 @@
 import { useState } from 'react'
-import { siteInfo } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
+import { submitContactLead } from '../api/client'
 
 export default function Contact() {
+  const { siteInfo } = useSiteData()
   const [form, setForm] = useState({ name: '', phone: '', course: '', message: '' })
+  const [submitting, setSubmitting] = useState(false)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setSubmitting(true)
+
+    // Save the lead to the backend so it shows up in the admin panel —
+    // but never let a slow/failed API call block the WhatsApp message,
+    // since that's the part the student actually needs right now.
+    try {
+      await submitContactLead({
+        name: form.name,
+        phone: form.phone,
+        courseInterested: form.course,
+        message: form.message,
+      })
+    } catch (err) {
+      console.error('Could not save enquiry to backend:', err)
+    } finally {
+      setSubmitting(false)
+    }
+
     const lines = [
       'New enquiry from the website:',
       `Name: ${form.name}`,
@@ -69,8 +90,10 @@ export default function Contact() {
             Message (optional)
             <textarea name="message" rows="3" value={form.message} onChange={handleChange} placeholder="Any specific subject or exam?" />
           </label>
-          <button type="submit" className="btn btn-primary btn-full">Send via WhatsApp</button>
-          <p className="form-note">Opens WhatsApp with your details filled in — nothing is stored on this site.</p>
+          <button type="submit" className="btn btn-primary btn-full" disabled={submitting}>
+            {submitting ? 'Sending…' : 'Send via WhatsApp'}
+          </button>
+          <p className="form-note">Opens WhatsApp with your details filled in, and saves your enquiry with us.</p>
         </form>
       </div>
     </section>

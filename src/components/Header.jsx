@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { siteInfo } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Header() {
+  const { siteInfo } = useSiteData()
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
 

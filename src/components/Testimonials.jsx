@@ -1,6 +1,8 @@
-import { testimonials } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Testimonials() {
+  const { testimonials } = useSiteData()
+
   return (
     <section className="section-pad bg-cream" id="testimonials">
       <div className="wrap">

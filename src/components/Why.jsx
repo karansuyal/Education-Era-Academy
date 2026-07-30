@@ -1,6 +1,8 @@
-import { whyPoints } from '../data/content'
+import { useSiteData } from '../context/SiteDataContext'
 
 export default function Why() {
+  const { whyPoints } = useSiteData()
+
   return (
     <section className="section-pad bg-chalk">
       <div className="wrap">
