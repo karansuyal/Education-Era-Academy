@@ -1,51 +1,27 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session, selectinload
 
-from app.core.crud_factory import build_crud_router
-from app.models.academics import Chapter, ClassLevel, Note, Subject
-from app.schemas.admin_academics import (
-    ChapterAdminOut,
-    ChapterCreate,
-    ChapterUpdate,
-    ClassLevelAdminOut,
-    ClassLevelCreate,
-    ClassLevelUpdate,
-    NoteAdminOut,
-    NoteCreate,
-    NoteUpdate,
-    SubjectAdminOut,
-    SubjectCreate,
-    SubjectUpdate,
-)
+from app.core.database import get_db
+from app.models.academics import Chapter, ClassLevel, Subject
+from app.schemas.academics import ClassLevelOut
 
-router = APIRouter(prefix="/admin/academics", tags=["admin:academics"])
+router = APIRouter(prefix="/academics", tags=["academics"])
 
-# Note: these use flat admin Out schemas (ClassLevelAdminOut/SubjectAdminOut/etc.
-# from schemas/admin_academics.py) which include parent ids + order_index —
-# required by the admin panel's client-side filtering. The public "Out"
-# schemas (schemas/academics.py) are nested and intentionally omit those ids,
-# so they aren't suitable here.
 
-router.include_router(
-    build_crud_router(
-        model=ClassLevel, create_schema=ClassLevelCreate, update_schema=ClassLevelUpdate,
-        out_schema=ClassLevelAdminOut, prefix="/classes", tag="admin:academics:classes",
+@router.get("/classes", response_model=list[ClassLevelOut])
+def list_classes(db: Session = Depends(get_db)):
+    """Returns the full Class -> Subject -> Chapter -> Notes tree in one
+    call — this is what the Notes page's class/subject tabs read from.
+    selectinload avoids N+1 queries for the nested relationships."""
+
+    classes = (
+        db.query(ClassLevel)
+        .options(
+            selectinload(ClassLevel.subjects)
+            .selectinload(Subject.chapters)
+            .selectinload(Chapter.notes)
+        )
+        .order_by(ClassLevel.order_index)
+        .all()
     )
-)
-router.include_router(
-    build_crud_router(
-        model=Subject, create_schema=SubjectCreate, update_schema=SubjectUpdate,
-        out_schema=SubjectAdminOut, prefix="/subjects", tag="admin:academics:subjects",
-    )
-)
-router.include_router(
-    build_crud_router(
-        model=Chapter, create_schema=ChapterCreate, update_schema=ChapterUpdate,
-        out_schema=ChapterAdminOut, prefix="/chapters", tag="admin:academics:chapters",
-    )
-)
-router.include_router(
-    build_crud_router(
-        model=Note, create_schema=NoteCreate, update_schema=NoteUpdate,
-        out_schema=NoteAdminOut, prefix="/notes", tag="admin:academics:notes",
-    )
-)
+    return classes
