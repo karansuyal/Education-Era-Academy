@@ -34,7 +34,7 @@ export default function Gallery() {
               )}
               {item.type === "video" && item.youtubeId && (
                 <img
-                  src={`https://img.youtube.com/vi/${item.youtubeId}/hqdefault.jpg`}
+                  src={item.poster || `https://img.youtube.com/vi/${item.youtubeId}/hqdefault.jpg`}
                   alt={item.label}
                   style={{
                     position: "absolute",
