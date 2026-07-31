@@ -1,18 +1,39 @@
-# Shikhar Academy — React Version
+# Education Era Academy
 
-Same coaching-center site as before, rebuilt in **React + Vite**, with five
-new features added: photo/video gallery, FAQ accordion, fee structure with
-EMI info, blog/announcements section, and a basic online mock test.
+Coaching-center website for Class 9–12 and government exam preparation —
+homepage, notes & video lectures, blog/announcements, and an online mock
+test, backed by a real API and an admin panel for managing content.
 
-Still **no backend, no database** — all data lives in one file
-(`src/data/content.js`) and the enquiry form + sticky WhatsApp button work
-exactly like before, just opening WhatsApp with a pre-filled message.
+**Live site:** https://education-era-academy.vercel.app
 
-## Run it
+## Stack
 
+- **Frontend** — React 18 + Vite, React Router. Deployed on Vercel.
+- **Backend** — FastAPI + SQLAlchemy + Alembic (PostgreSQL). Deployed on
+  Render.
+- **Admin panel** — built into the frontend at `/admin`, talks to the
+  backend's admin API routes (JWT auth) to manage site content, academics
+  (classes/subjects/chapters/notes/videos), quiz questions, and leads —
+  no more hand-editing JS files to update the site.
+
+> Note: `src/data/content.js` still exists as a **fallback** — if the
+> backend is unreachable (e.g. Render's free tier waking up from sleep
+> takes 30–60s), the site renders this static data instead of a blank
+> page, then swaps in real data once the API responds.
+
+## Run it locally
+
+### Frontend
 ```bash
 npm install
-npm run dev        # starts local dev server, usually http://localhost:5173
+npm run dev        # http://localhost:5173
+```
+
+Point it at your backend with an env var (defaults to the deployed Render
+URL if not set):
+```bash
+# .env
+VITE_API_URL=http://localhost:8000
 ```
 
 To build for deployment:
@@ -21,92 +42,108 @@ npm run build       # outputs static files into dist/
 npm run preview     # preview the production build locally
 ```
 
+### Backend
+```bash
+cd backend
+pip install -r requirements.txt
+alembic upgrade head          # run migrations
+uvicorn app.main:app --reload # http://localhost:8000
+```
+
 ## File structure
 ```
-shikhar-react/
 ├── index.html
 ├── package.json
 ├── vite.config.js
+├── vercel.json                -> SPA rewrites for client-side routing
+├── public/
+│   ├── notes/                 -> downloadable PDF notes
+│   ├── robots.txt
+│   └── sitemap.xml
 ├── src/
-│   ├── main.jsx              -> app entry, router setup
-│   ├── App.jsx                -> routes: Home, Blog, BlogPost, MockTest
-│   ├── index.css              -> ALL styling (design tokens at the top)
+│   ├── main.jsx                -> app entry, router setup
+│   ├── App.jsx                 -> routes: Home, Blog, BlogPost, MockTest, Notes, Admin
+│   ├── index.css                -> ALL styling (design tokens at the top)
+│   ├── api/
+│   │   └── client.js           -> fetch wrapper + calls to the FastAPI backend
+│   ├── context/
+│   │   └── SiteDataContext.jsx -> fetches site content once, exposes it app-wide,
+│   │                              falls back to data/content.js if the API is down
 │   ├── data/
-│   │   └── content.js         -> ⭐ EDIT THIS FILE for all text/data changes
-│   ├── components/            -> reusable sections (Hero, Courses, FAQ, etc.)
-│   └── pages/
-│       ├── Home.jsx           -> composes all homepage sections
-│       ├── Blog.jsx           -> blog/announcements list
-│       ├── BlogPost.jsx       -> single announcement page (/blog/:postId)
-│       └── MockTest.jsx       -> the online mock test/quiz
+│   │   └── content.js          -> fallback/offline data (see note above)
+│   ├── components/             -> reusable sections (Hero, Courses, FAQ, Gallery, etc.)
+│   ├── pages/
+│   │   ├── Home.jsx            -> composes all homepage sections
+│   │   ├── Blog.jsx            -> blog/announcements list
+│   │   ├── BlogPost.jsx        -> single announcement page (/blog/:postId)
+│   │   ├── Notes.jsx           -> notes & video lectures (/notes)
+│   │   └── MockTest.jsx        -> the online mock test/quiz
+│   ├── admin/                  -> admin panel (login, dashboard, content/academics/quiz/leads editors)
+│   └── utils/
+│       └── usePageMeta.js      -> sets per-page <title>/description on route change
+└── backend/
+    ├── app/
+    │   ├── main.py              -> FastAPI app, routers, CORS, rate limiting
+    │   ├── routers/             -> public + admin API endpoints
+    │   ├── models/, schemas/    -> SQLAlchemy models & Pydantic schemas
+    │   └── core/                -> config, auth/limiter setup
+    ├── alembic/                 -> DB migrations
+    └── requirements.txt
 ```
 
-## The one file you'll edit most: `src/data/content.js`
-Everything text-based — name, phone, batches, faculty, results, FAQs, fee
-plans, blog posts, quiz questions — lives here as plain JavaScript arrays
-and objects. Change the data here and it updates everywhere on the site
-automatically, no need to touch component files.
+## Editing content
+
+Almost everything (site info, batches, faculty, results, testimonials,
+gallery, FAQs, fee plans, notes/videos by class & subject, quiz questions,
+blog posts) is now managed through the **admin panel at `/admin`**, not by
+editing code. Log in there to add/update content — changes go straight to
+the database and appear on the live site immediately.
+
+`src/data/content.js` should only need editing to update the **offline
+fallback** shown while the backend is waking up or unreachable.
+
+## Key routes
+
+| Route | Purpose |
+|---|---|
+| `/` | Homepage — hero, courses, faculty, results, testimonials, gallery, FAQ, fees, contact |
+| `/notes` | Class-wise, subject-wise notes (PDF) and video lectures |
+| `/blog` , `/blog/:postId` | Announcements / blog posts |
+| `/mock-test` | Short multiple-choice quiz with WhatsApp score-share |
+| `/admin` | Admin login + dashboard (content, academics, quiz, leads) |
 
 ## Before going live — checklist
 
-1. **`siteInfo`** in `content.js` — real name, phone, WhatsApp number
-   (format `91XXXXXXXXXX`, no + or spaces), email, address.
-2. **`stats`** — real numbers for students mentored / selection rate / years.
-3. **`faculty`** — real names + qualifications. To use real photos instead
-   of initials, replace the `.faculty-photo` div in
-   `components/Faculty.jsx` with an `<img>` tag.
-4. **`results`** — real student names and scores. **Get permission from the
-   student/parent before publishing any name.**
-5. **`galleryItems`** — currently placeholder tiles. Add real photos by
-   putting images in `public/images/` and rendering an `<img>` inside the
-   `.gallery-tile` button in `components/Gallery.jsx`.
-
-   **For the teaching video**: drop your video file (e.g.
-   `teaching-demo.mp4`) into `public/videos/` and make sure `src` in the
-   video's `galleryItems` entry in `content.js` points to it, e.g.
-   `src: "/videos/teaching-demo.mp4"`. It plays directly on the site with
-   a normal video player — no YouTube account or upload needed. Keep the
-   file reasonably small (compress it — under ~30-50MB is a good target)
-   so the site stays fast to load; a phone-recorded clip usually needs
-   compressing first (HandBrake app, or any free online video compressor).
-6. **`faqs`** and **`feePlans`** — replace placeholder fee amounts with your
-   actual fee structure.
-7. **`blogPosts`** — replace with real announcements as they happen; each
-   post automatically gets its own page at `/blog/<id>`.
-8. **`quizQuestions`** — replace with real subject-specific questions.
-9. **`mapEmbedUrl`** in `siteInfo` — optional. Get an embed link from Google
-   Maps ("Share" → "Embed a map") and paste the `src` URL here to show a map
-   on the Contact section.
-
-## New features explained
-
-- **Gallery** (`/#gallery`) — grid of photo/video tiles that open in a
-  lightbox popup on click. Currently gradient placeholders with labels;
-  swap in real images as described above.
-- **FAQ accordion** (`/#faq`) — click a question to expand/collapse the
-  answer. First question is open by default.
-- **Fees** (`/#fees`) — three pricing cards with full-payment and EMI
-  amounts side by side, plus what's included in each plan.
-- **Blog/Announcements** (`/blog`) — a list page and individual post pages,
-  useful for admission announcements, result highlights, or notices.
-- **Mock Test** (`/mock-test`) — a short multiple-choice quiz. Shows the
-  correct answer after each question, then a final score with a button to
-  share the score via WhatsApp (which naturally becomes a lead for you).
-- **Sticky WhatsApp button** — floating button, bottom-right, on every page.
+1. **`VITE_API_URL`** set correctly in Vercel's Environment Variables to
+   point at the production backend.
+2. Backend **CORS origins** in `backend/app/core/config.py` include the
+   production frontend domain.
+3. **`sitemap.xml`** and **`robots.txt`** in `public/` point at the real
+   deployed domain (already set to
+   `https://education-era-academy.vercel.app`).
+4. Admin account created with a strong password; default/test credentials
+   removed.
+5. Real content entered via the admin panel — site info, faculty photos,
+   results (get permission before publishing student names), gallery
+   images, fee plans, notes/videos.
+6. Images optimized (compressed/WebP) before uploading — large JPGs slow
+   the site down.
+7. `mapEmbedUrl` — Google Maps "Share → Embed a map" link, set via admin,
+   shown on the Contact section.
 
 ## Deploying
 
-This is a Vite React app (Single Page App with routing), so unlike the
-plain HTML version it needs a host that supports SPA routing:
-- **Vercel** (recommended) — `vercel` CLI or connect the GitHub repo,
-  auto-detects Vite, handles routing automatically.
-- **Netlify** — connect repo or drag the `dist/` folder after
-  `npm run build`; add a `_redirects` file with `/* /index.html 200` in
-  `public/` so routes like `/blog/some-post` work on refresh.
+- **Frontend (Vercel)** — connect the GitHub repo, auto-detects Vite;
+  `vercel.json` already has the SPA rewrite so client-side routes
+  (`/blog/some-post`, `/notes`, etc.) work on direct load/refresh.
+- **Backend (Render)** — connect the repo, set the start command to
+  `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, add a Postgres
+  database, set environment variables (DB URL, JWT secret, CORS origins).
+  Free tier sleeps after inactivity — first request after idle can take
+  30–60s (handled gracefully by the fallback data on the frontend).
 
-## If you want more later (bigger upsells)
-- Admin panel to edit content.js data through a UI instead of code —
-  needs a backend + database, similar to how LocalKart's admin flows work.
-- Student login for attendance/marks/study material — needs backend + auth.
-- Real payment gateway for fee payment online — needs backend + gateway
-  integration (Razorpay/PhonePe etc).
+## Possible next upsells
+
+- Student login for attendance/marks/personalized study material.
+- Real payment gateway for fee payment online (Razorpay/PhonePe etc).
+- Email/SMS notifications for new leads from the contact form.
