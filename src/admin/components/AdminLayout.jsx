@@ -1,4 +1,5 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAdminAuth } from '../AdminAuthContext'
 import '../admin.css'
 
@@ -46,6 +47,14 @@ const NAV_GROUPS = [
 export default function AdminLayout() {
   const { admin, logout } = useAdminAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // Close the mobile drawer automatically whenever the route changes
+  // (i.e. right after tapping a nav link).
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [location.pathname])
 
   async function handleLogout() {
     await logout()
@@ -54,7 +63,23 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-shell">
-      <aside className="admin-sidebar">
+      {/* Mobile-only top bar with hamburger toggle */}
+      <header className="admin-topbar">
+        <button
+          className="admin-menu-toggle"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+        <div className="admin-topbar-brand">Education Era Academy</div>
+      </header>
+
+      {/* Backdrop shown behind the drawer on mobile when it's open */}
+      {menuOpen && <div className="admin-sidebar-backdrop" onClick={() => setMenuOpen(false)} />}
+
+      <aside className={`admin-sidebar${menuOpen ? ' open' : ''}`}>
         <div className="admin-sidebar-brand">Education Era Academy</div>
         <div className="admin-sidebar-sub">{admin ? `Signed in as ${admin.username}` : ''}</div>
         <nav className="admin-nav">
