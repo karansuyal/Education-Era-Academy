@@ -83,6 +83,7 @@ export default function Contact() {
               <option>Foundation — Class 9 &amp; 10</option>
               <option>Class 11 &amp; 12 — Science</option>
               <option>Government Exam Preparation</option>
+              <option>Computer Applications &amp; Coding</option>
               <option>Not sure yet</option>
             </select>
           </label>
