@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     # Environment
     ENV: str = "development"
 
+    # Telegram notifications (leave blank to disable)
+    TELEGRAM_BOT_TOKEN: str = ""
+    TELEGRAM_CHAT_ID: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property
