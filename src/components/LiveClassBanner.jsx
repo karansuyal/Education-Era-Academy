@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useSiteData } from '../context/SiteDataContext'
 
 // scheduled_at comes from the backend as a naive local-time string (no
@@ -28,6 +29,16 @@ function formatWhen(date) {
 export default function LiveClassBanner() {
   const { liveClasses } = useSiteData()
 
+  // getStatus() depends on the current time, which doesn't change React
+  // state by itself — without this, the banner would only recompute
+  // "upcoming" vs "live" on the next full page load/refresh. Ticking a
+  // dummy counter every 30s forces a re-render so it updates on its own.
+  const [, forceTick] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => forceTick((n) => n + 1), 30000)
+    return () => clearInterval(id)
+  }, [])
+
   const next = liveClasses
     .map((c) => ({ ...c, status: getStatus(c) }))
     .filter((c) => c.status !== 'ended')
@@ -49,7 +60,7 @@ export default function LiveClassBanner() {
           {next.batchLabel && <span className="live-class-batch"> · {next.batchLabel}</span>}
           <span className="live-class-time"> · {isLive ? 'In progress' : formatWhen(start)}</span>
         </div>
-        <a
+        
           className="live-class-join"
           href={next.meetingLink}
           target="_blank"
