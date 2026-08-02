@@ -3,6 +3,7 @@ from app.models.refresh_token import RefreshToken
 from app.models.academics import ClassLevel, Subject, Chapter, Note
 from app.models.quiz import MockTest, Question, Attempt, AttemptAnswer
 from app.models.lead import ContactLead
+from app.models.live_class import LiveClass
 from app.models.content import (
     SiteSettings,
     StatItem,
@@ -29,6 +30,7 @@ __all__ = [
     "Attempt",
     "AttemptAnswer",
     "ContactLead",
+    "LiveClass",
     "SiteSettings",
     "StatItem",
     "WhyPoint",

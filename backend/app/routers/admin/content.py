@@ -17,6 +17,7 @@ from app.models.content import (
     Testimonial,
     WhyPoint,
 )
+from app.models.live_class import LiveClass
 from app.schemas.admin_content import (
     BatchAdminOut,
     BatchCreate,
@@ -36,6 +37,9 @@ from app.schemas.admin_content import (
     GalleryItemAdminOut,
     GalleryItemCreate,
     GalleryItemUpdate,
+    LiveClassAdminOut,
+    LiveClassCreate,
+    LiveClassUpdate,
     ResultHighlightAdminOut,
     ResultHighlightCreate,
     ResultHighlightUpdate,
@@ -114,6 +118,13 @@ router.include_router(
         model=BlogPost, create_schema=BlogPostCreate, update_schema=BlogPostUpdate,
         out_schema=BlogPostAdminOut, prefix="/blog", tag="admin:blog",
         order_by_field="created_at",
+    )
+)
+router.include_router(
+    build_crud_router(
+        model=LiveClass, create_schema=LiveClassCreate, update_schema=LiveClassUpdate,
+        out_schema=LiveClassAdminOut, prefix="/live-classes", tag="admin:live-classes",
+        order_by_field="scheduled_at",
     )
 )
 

@@ -15,6 +15,7 @@ from app.models.content import (
     Testimonial,
     WhyPoint,
 )
+from app.models.live_class import LiveClass
 from app.schemas.content import (
     BatchOut,
     BlogPostDetailOut,
@@ -23,6 +24,7 @@ from app.schemas.content import (
     FAQItemOut,
     FeePlanOut,
     GalleryItemOut,
+    LiveClassOut,
     ResultHighlightOut,
     SiteContentBundle,
     SiteInfoOut,
@@ -74,6 +76,16 @@ def get_site_content(db: Session = Depends(get_db)):
         ],
         faqs=[FAQItemOut.model_validate(x) for x in db.query(FAQItem).order_by(FAQItem.order_index).all()],
         fee_plans=[FeePlanOut.model_validate(x) for x in db.query(FeePlan).order_by(FeePlan.order_index).all()],
+        # scheduled_at is stored as a naive local (IST) time, not UTC, so we
+        # don't filter "already finished" classes out here — comparing a
+        # naive local time against the server's UTC clock would be
+        # unreliable. The frontend filters using the visitor's own clock
+        # instead. Turn "Is Active" off in the admin panel once a class is
+        # done if you'd rather remove it outright.
+        live_classes=[
+            LiveClassOut.model_validate(x)
+            for x in db.query(LiveClass).filter(LiveClass.is_active.is_(True)).order_by(LiveClass.scheduled_at).all()
+        ],
     )
 
 

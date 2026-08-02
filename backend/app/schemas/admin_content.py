@@ -248,3 +248,28 @@ class SiteSettingsAdminOut(BaseModel):
     youtube_url: str
     youtube_channel_id: str
     youtube_description: str
+
+# ---- LiveClass ----
+class LiveClassCreate(BaseModel):
+    title: str
+    batch_label: str = ""
+    platform: str = "Google Meet"
+    meeting_link: str
+    scheduled_at: datetime.datetime
+    duration_minutes: int = 60
+    is_active: bool = True
+
+
+class LiveClassUpdate(BaseModel):
+    title: str | None = None
+    batch_label: str | None = None
+    platform: str | None = None
+    meeting_link: str | None = None
+    scheduled_at: datetime.datetime | None = None
+    duration_minutes: int | None = None
+    is_active: bool | None = None
+
+
+class LiveClassAdminOut(LiveClassCreate):
+    model_config = ConfigDict(from_attributes=True)
+    id: int

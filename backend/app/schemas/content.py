@@ -90,6 +90,16 @@ class FeePlanOut(BaseModel):
     featured: bool
 
 
+class LiveClassOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    title: str
+    batch_label: str
+    platform: str
+    meeting_link: str
+    scheduled_at: datetime
+    duration_minutes: int
+
+
 class SiteContentBundle(BaseModel):
     """Everything the homepage needs in one call — mirrors the old content.js
     exports (minus blog posts and academics, which have their own endpoints
@@ -105,6 +115,7 @@ class SiteContentBundle(BaseModel):
     gallery: list[GalleryItemOut]
     faqs: list[FAQItemOut]
     fee_plans: list[FeePlanOut]
+    live_classes: list[LiveClassOut]
 
 
 class BlogPostListItemOut(BaseModel):
