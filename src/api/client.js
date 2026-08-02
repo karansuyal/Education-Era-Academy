@@ -94,6 +94,14 @@ export function normalizeSiteContent(bundle) {
       includes: f.includes,
       featured: f.featured,
     })),
+    liveClasses: bundle.live_classes.map((c) => ({
+      title: c.title,
+      batchLabel: c.batch_label,
+      platform: c.platform,
+      meetingLink: c.meeting_link,
+      scheduledAt: c.scheduled_at,
+      durationMinutes: c.duration_minutes,
+    })),
   }
 }
 

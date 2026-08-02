@@ -20,6 +20,7 @@ import {
   faqsResource,
   feePlansResource,
   blogResource,
+  liveClassesResource,
 } from './resources/resourceConfigs'
 import './admin.css'
 
@@ -48,6 +49,7 @@ export default function AdminApp() {
           <Route path="faqs" element={<CrudPage resource={faqsResource} />} />
           <Route path="fee-plans" element={<CrudPage resource={feePlansResource} />} />
           <Route path="blog" element={<CrudPage resource={blogResource} />} />
+          <Route path="live-classes" element={<CrudPage resource={liveClassesResource} />} />
           <Route path="academics" element={<AcademicsPage />} />
           <Route path="quiz" element={<QuizPage />} />
           <Route path="leads" element={<LeadsPage />} />

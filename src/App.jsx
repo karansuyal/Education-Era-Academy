@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import StickyWhatsapp from './components/StickyWhatsapp'
 import SEOSchema from './components/SEOSchema'
+import LiveClassBanner from './components/LiveClassBanner'
 import Home from './pages/Home'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
@@ -22,6 +23,7 @@ function PublicSite() {
   return (
     <>
       <SEOSchema />
+      <LiveClassBanner />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

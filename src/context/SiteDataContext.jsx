@@ -30,6 +30,7 @@ const FALLBACK_DATA = {
   gallery: fallback.galleryItems,
   faqs: fallback.faqs,
   feePlans: fallback.feePlans,
+  liveClasses: [],
 }
 
 const SiteDataContext = createContext({

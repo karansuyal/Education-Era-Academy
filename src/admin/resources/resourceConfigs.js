@@ -173,3 +173,29 @@ export const feePlansResource = {
     { key: 'featured', label: 'Featured', type: 'checkbox' },
   ],
 }
+
+export const liveClassesResource = {
+  endpoint: '/admin/live-classes',
+  title: 'Live Classes',
+  description: 'Schedule Zoom / Google Meet links for upcoming live classes. Shown as a banner on the homepage while a class is upcoming or in progress.',
+  singularName: 'live class',
+  emptyItem: {
+    title: '', batch_label: '', platform: 'Google Meet', meeting_link: '',
+    scheduled_at: '', duration_minutes: 60, is_active: true,
+  },
+  fields: [
+    { key: 'title', label: 'Title', type: 'text', placeholder: 'e.g. Python — Loops & Conditionals', span2: true },
+    { key: 'batch_label', label: 'Batch', type: 'text', placeholder: 'e.g. Computer Applications' },
+    { key: 'platform', label: 'Platform', type: 'select', options: ['Google Meet', 'Zoom', 'YouTube Live', 'Other'] },
+    { key: 'meeting_link', label: 'Meeting link', type: 'text', span2: true, placeholder: 'https://meet.google.com/...' },
+    { key: 'scheduled_at', label: 'Date & time (your local time)', type: 'datetime-local' },
+    { key: 'duration_minutes', label: 'Duration (minutes)', type: 'number' },
+    { key: 'is_active', label: 'Active (visible on site)', type: 'checkbox' },
+  ],
+  columns: [
+    { key: 'title', label: 'Title' },
+    { key: 'batch_label', label: 'Batch' },
+    { key: 'scheduled_at', label: 'When' },
+    { key: 'is_active', label: 'Active', type: 'checkbox' },
+  ],
+}

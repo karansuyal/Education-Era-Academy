@@ -325,6 +325,35 @@ section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); max-width: 24ch; margin-bott
 }
 .sticky-whatsapp:hover { transform: scale(1.06); }
 
+/* Live Class banner — thin announcement strip shown site-wide when a
+   class is upcoming or in progress. Gold by default; flips to a warmer
+   red/live look while the class is actually in progress. */
+.live-class-banner {
+  background: var(--yellow); color: var(--ink-deep);
+  font-family: var(--font-mono); font-size: 0.82rem;
+}
+.live-class-banner.is-live { background: var(--rank-red); color: #fff; }
+.live-class-banner-inner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 24px; flex-wrap: wrap;
+}
+.live-class-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+  flex-shrink: 0; animation: live-class-pulse 1.6s ease-in-out infinite;
+}
+@keyframes live-class-pulse {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.35; }
+}
+.live-class-text { flex: 1 1 auto; min-width: 200px; }
+.live-class-batch, .live-class-time { opacity: 0.85; }
+.live-class-join {
+  flex-shrink: 0; background: var(--ink-deep); color: var(--chalk);
+  padding: 6px 14px; border-radius: 4px; font-weight: 600; text-decoration: none;
+  white-space: nowrap;
+}
+.live-class-banner.is-live .live-class-join { background: #fff; color: var(--rank-red); }
+.live-class-join:hover { opacity: 0.85; }
+
 /* ==========================================================
    FOOTER
    ========================================================== */

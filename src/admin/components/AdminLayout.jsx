@@ -31,6 +31,10 @@ const NAV_GROUPS = [
     links: [{ to: '/admin/blog', label: 'Blog Posts' }],
   },
   {
+    label: 'Live Classes',
+    links: [{ to: '/admin/live-classes', label: 'Schedule' }],
+  },
+  {
     label: 'Academics',
     links: [{ to: '/admin/academics', label: 'Classes & Notes' }],
   },

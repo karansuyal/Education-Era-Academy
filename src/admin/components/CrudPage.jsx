@@ -112,7 +112,12 @@ function ItemForm({ resource, initial, onCancel, onSaved }) {
             ) : (
               <input
                 id={field.key}
-                type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : 'text'}
+                type={
+                  field.type === 'number' ? 'number'
+                  : field.type === 'date' ? 'date'
+                  : field.type === 'datetime-local' ? 'datetime-local'
+                  : 'text'
+                }
                 value={values[field.key]}
                 onChange={(e) => setField(field.key, e.target.value)}
                 placeholder={field.placeholder}
