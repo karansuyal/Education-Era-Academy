@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSiteData } from '../context/SiteDataContext'
 
-// scheduled_at comes from the backend as a naive local-time string (no
-// timezone suffix), e.g. "2026-08-05T18:00:00" — entered by the admin in
-// their own local time (IST). `new Date(...)` on a string in that exact
-// shape is parsed as local time by JS engines, which lines up correctly
-// as long as visitors are also in IST (true for the target audience).
 function getStatus(cls) {
   const start = new Date(cls.scheduledAt)
   const end = new Date(start.getTime() + cls.durationMinutes * 60000)
@@ -29,10 +24,6 @@ function formatWhen(date) {
 export default function LiveClassBanner() {
   const { liveClasses } = useSiteData()
 
-  // getStatus() depends on the current time, which doesn't change React
-  // state by itself — without this, the banner would only recompute
-  // "upcoming" vs "live" on the next full page load/refresh. Ticking a
-  // dummy counter every 30s forces a re-render so it updates on its own.
   const [, forceTick] = useState(0)
   useEffect(() => {
     const id = setInterval(() => forceTick((n) => n + 1), 30000)
@@ -60,12 +51,7 @@ export default function LiveClassBanner() {
           {next.batchLabel && <span className="live-class-batch"> · {next.batchLabel}</span>}
           <span className="live-class-time"> · {isLive ? 'In progress' : formatWhen(start)}</span>
         </div>
-        
-          className="live-class-join"
-          href={next.meetingLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a className="live-class-join" href={next.meetingLink} target="_blank" rel="noopener noreferrer">
           {isLive ? 'Join Now' : 'View Details'}
         </a>
       </div>
