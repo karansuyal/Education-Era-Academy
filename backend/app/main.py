@@ -23,9 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from app.routers import academics, auth, contact, public, quiz
+from app.routers import academics, auth, contact, doubts, public, quiz
 from app.routers.admin import academics as admin_academics
 from app.routers.admin import content as admin_content
+from app.routers.admin import doubts as admin_doubts
 from app.routers.admin import leads as admin_leads
 from app.routers.admin import quiz as admin_quiz
 
@@ -34,10 +35,12 @@ app.include_router(public.router)
 app.include_router(academics.router)
 app.include_router(quiz.router)
 app.include_router(contact.router)
+app.include_router(doubts.router)
 app.include_router(admin_content.router)
 app.include_router(admin_academics.router)
 app.include_router(admin_quiz.router)
 app.include_router(admin_leads.router)
+app.include_router(admin_doubts.router)
 
 
 @app.get("/health", tags=["meta"])
