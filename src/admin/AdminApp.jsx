@@ -8,6 +8,7 @@ import SiteSettingsPage from './pages/SiteSettingsPage'
 import LeadsPage from './pages/LeadsPage'
 import AcademicsPage from './pages/AcademicsPage'
 import QuizPage from './pages/QuizPage'
+import DoubtsPage from './pages/DoubtsPage'
 import CrudPage from './components/CrudPage'
 import {
   statsResource,
@@ -53,6 +54,7 @@ export default function AdminApp() {
           <Route path="academics" element={<AcademicsPage />} />
           <Route path="quiz" element={<QuizPage />} />
           <Route path="leads" element={<LeadsPage />} />
+          <Route path="doubts" element={<DoubtsPage />} />
         </Route>
       </Routes>
     </AdminAuthProvider>

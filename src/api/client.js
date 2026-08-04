@@ -192,3 +192,34 @@ export function submitContactLead({ name, phone, courseInterested, message }) {
     message: message || '',
   })
 }
+
+// ------------------------------------------------------------
+// Doubts (public Q&A board, per chapter)
+// ------------------------------------------------------------
+function normalizeDoubt(d) {
+  return {
+    id: d.id,
+    chapterId: d.chapter_id,
+    studentName: d.student_name,
+    questionText: d.question_text,
+    imageUrl: d.image_url,
+    status: d.status,
+    createdAt: d.created_at,
+    replies: d.replies.map((r) => ({ id: r.id, replyText: r.reply_text, createdAt: r.created_at })),
+  }
+}
+
+export function getDoubts(chapterId) {
+  const qs = chapterId ? `?chapter_id=${chapterId}` : ''
+  return apiGet(`/doubts${qs}`).then((list) => list.map(normalizeDoubt))
+}
+
+export function submitDoubt({ chapterId, studentName, studentPhone, questionText, imageUrl }) {
+  return apiPost('/doubts', {
+    chapter_id: chapterId,
+    student_name: studentName,
+    student_phone: studentPhone,
+    question_text: questionText,
+    image_url: imageUrl || '',
+  })
+}

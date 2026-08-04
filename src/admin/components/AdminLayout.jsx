@@ -46,6 +46,10 @@ const NAV_GROUPS = [
     label: 'Enquiries',
     links: [{ to: '/admin/leads', label: 'Leads' }],
   },
+  {
+    label: 'Doubts',
+    links: [{ to: '/admin/doubts', label: 'Student Doubts' }],
+  },
 ]
 
 export default function AdminLayout() {

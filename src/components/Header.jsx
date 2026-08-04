@@ -23,6 +23,7 @@ export default function Header() {
           <a href="/#fees" onClick={close}>Fees</a>
           <Link to="/blog" onClick={close}>Blog</Link>
           <Link to="/notes" onClick={close}>Notes</Link>
+          <Link to="/doubts" onClick={close}>Ask a Doubt</Link>
           <Link to="/mock-test" onClick={close}>Mock Test</Link>
           <a href="/#contact" className="nav-cta" onClick={close}>Book Free Demo</a>
         </nav>

@@ -10,6 +10,7 @@ import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import MockTest from './pages/MockTest'
 import Notes from './pages/Notes'
+import Doubts from './pages/Doubts'
 import AdminApp from './admin/AdminApp'
 import { initAnalytics, trackPageview } from './utils/analytics'
 
@@ -31,6 +32,7 @@ function PublicSite() {
         <Route path="/blog/:postId" element={<BlogPost />} />
         <Route path="/mock-test" element={<MockTest />} />
         <Route path="/notes" element={<Notes />} />
+        <Route path="/doubts" element={<Doubts />} />
       </Routes>
       <Footer />
       <StickyWhatsapp />
