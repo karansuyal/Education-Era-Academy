@@ -3,6 +3,28 @@ import { useSiteData } from '../context/SiteDataContext'
 import { getAcademics, getDoubts, submitDoubt } from '../api/client'
 import usePageMeta from '../utils/usePageMeta'
 
+const IDENTITY_KEY = 'eea_doubt_identity'
+
+function loadSavedIdentity() {
+  try {
+    const raw = localStorage.getItem(IDENTITY_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (parsed?.name && parsed?.phone) return parsed
+    return null
+  } catch {
+    return null
+  }
+}
+
+function saveIdentity(name, phone) {
+  try {
+    localStorage.setItem(IDENTITY_KEY, JSON.stringify({ name, phone }))
+  } catch {
+    // ignore storage errors (e.g. private mode)
+  }
+}
+
 function timeAgo(isoString) {
   const diffMs = Date.now() - new Date(isoString).getTime()
   const mins = Math.floor(diffMs / 60000)
@@ -31,7 +53,14 @@ export default function Doubts() {
   const [askSubjectId, setAskSubjectId] = useState(null)
   const [askChapterId, setAskChapterId] = useState(null)
 
-  const [form, setForm] = useState({ name: '', phone: '', question: '', imageUrl: '' })
+  const savedIdentity = loadSavedIdentity()
+  const [form, setForm] = useState({
+    name: savedIdentity?.name || '',
+    phone: savedIdentity?.phone || '',
+    question: '',
+    imageUrl: '',
+  })
+  const [identityKnown, setIdentityKnown] = useState(!!savedIdentity)
   const [submitting, setSubmitting] = useState(false)
   const [submitMsg, setSubmitMsg] = useState('')
 
@@ -100,7 +129,9 @@ export default function Doubts() {
         questionText: form.question,
         imageUrl: form.imageUrl,
       })
-      setForm({ name: '', phone: '', question: '', imageUrl: '' })
+      saveIdentity(form.name, form.phone)
+      setIdentityKnown(true)
+      setForm((f) => ({ ...f, question: '', imageUrl: '' }))
       setSubmitMsg("Posted! Your doubt is now visible below — a teacher will reply soon.")
       loadFeed()
     } catch (err) {
@@ -173,23 +204,49 @@ export default function Doubts() {
                 onChange={handleChange}
               />
 
-              <div className="doubt-composer-row">
-                <input
-                  type="text" name="name" required placeholder="Your name"
-                  value={form.name} onChange={handleChange}
-                />
-                <input
-                  type="tel" name="phone" required placeholder="Phone number"
-                  value={form.phone} onChange={handleChange}
-                />
-                <input
-                  type="url" name="imageUrl" placeholder="Photo link (optional)"
-                  value={form.imageUrl} onChange={handleChange}
-                />
-                <button type="submit" className="btn btn-primary" disabled={submitting}>
-                  {submitting ? 'Posting…' : 'Post doubt'}
-                </button>
-              </div>
+              {identityKnown ? (
+                <div className="doubt-composer-row">
+                  <input
+                    type="url" name="imageUrl" placeholder="Photo link (optional)"
+                    value={form.imageUrl} onChange={handleChange}
+                  />
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>
+                    {submitting ? 'Posting…' : 'Post doubt'}
+                  </button>
+                </div>
+              ) : (
+                <div className="doubt-composer-row">
+                  <input
+                    type="text" name="name" required placeholder="Your name"
+                    value={form.name} onChange={handleChange}
+                  />
+                  <input
+                    type="tel" name="phone" required placeholder="Phone number"
+                    value={form.phone} onChange={handleChange}
+                  />
+                  <input
+                    type="url" name="imageUrl" placeholder="Photo link (optional)"
+                    value={form.imageUrl} onChange={handleChange}
+                  />
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>
+                    {submitting ? 'Posting…' : 'Post doubt'}
+                  </button>
+                </div>
+              )}
+
+              {identityKnown && (
+                <p className="form-note" style={{ textAlign: 'left', marginTop: 6 }}>
+                  Posting as <strong>{form.name}</strong> ·{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIdentityKnown(false)}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--ink)', textDecoration: 'underline', cursor: 'pointer', font: 'inherit' }}
+                  >
+                    Not you?
+                  </button>
+                </p>
+              )}
+
               {submitMsg && <p className="form-note" style={{ textAlign: 'left' }}>{submitMsg}</p>}
             </form>
           )}
@@ -226,7 +283,7 @@ export default function Doubts() {
                   <div className="doubt-thread-meta">
                     <div className="doubt-thread-name-row">
                       <strong>{d.studentName}</strong>
-                      <span className="doubt-context-tag">{d.classLabel} · {d.subjectName} · {d.chapterTitle}</span>
+                      <span className="doubt-context-tag">{d.classLabel}</span>
                     </div>
                     <span className="doubt-time">{timeAgo(d.createdAt)}</span>
                   </div>
