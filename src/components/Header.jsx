@@ -17,14 +17,14 @@ export default function Header() {
 
         <nav className={`main-nav ${open ? 'open' : ''}`}>
           <a href="/#courses" onClick={close}>Batches</a>
-          <a href="/#gallery" onClick={close}>Gallery</a>
-          <a href="/#youtube-channel" onClick={close}>YouTube</a>
-          <a href="/#faq" onClick={close}>FAQ</a>
-          <a href="/#fees" onClick={close}>Fees</a>
-          <Link to="/blog" onClick={close}>Blog</Link>
           <Link to="/notes" onClick={close}>Notes</Link>
           <Link to="/doubts" onClick={close}>Ask a Doubt</Link>
           <Link to="/mock-test" onClick={close}>Mock Test</Link>
+          <Link to="/blog" onClick={close}>Blog</Link>
+          <a href="/#faq" onClick={close}>FAQ</a>
+          <a href="/#fees" onClick={close}>Fees</a>
+          <a href="/#gallery" onClick={close}>Gallery</a>
+          <a href="/#youtube-channel" onClick={close}>YouTube</a>
           <a href="/#contact" className="nav-cta" onClick={close}>Book Free Demo</a>
         </nav>
 

@@ -76,39 +76,54 @@ button { font-family: inherit; }
    HEADER / NAV
    ========================================================== */
 .site-header { position: sticky; top: 0; z-index: 50; background: var(--ink); border-bottom: 1px solid rgba(245, 240, 227, 0.12); box-shadow: 0 4px 20px -8px rgba(0,0,0,0.35); }
-.header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-.brand { display: flex; align-items: center; gap: 10px; color: var(--chalk); }
-.brand-mark { width: 34px; height: 34px; background: var(--yellow); color: var(--ink-deep); font-family: var(--font-display); font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1.1rem; }
-.brand-name { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--chalk); flex-shrink: 0; }
+.brand-mark { width: 34px; height: 34px; background: var(--yellow); color: var(--ink-deep); font-family: var(--font-display); font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1.1rem; flex-shrink: 0; }
+.brand-name { font-family: var(--font-display); font-weight: 600; font-size: clamp(0.95rem, 0.82rem + 0.5vw, 1.15rem); white-space: nowrap; }
 .brand-name em { font-style: normal; color: var(--yellow); }
 
-.main-nav { display: flex; align-items: center; gap: 26px; }
-.main-nav a { position: relative; color: rgba(245, 240, 227, 0.85); font-size: 0.9rem; font-weight: 500; transition: color 0.15s var(--ease); }
+.main-nav { display: flex; align-items: center; gap: clamp(10px, 1.5vw, 26px); flex-wrap: nowrap; min-width: 0; }
+.main-nav a {
+  position: relative; color: rgba(245, 240, 227, 0.85); font-weight: 500; white-space: nowrap;
+  font-size: clamp(0.78rem, 0.68rem + 0.3vw, 0.9rem);
+  transition: color 0.15s var(--ease);
+}
 .main-nav a::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
   background: var(--yellow); transform: scaleX(0); transform-origin: left; transition: transform 0.2s var(--ease);
 }
 .main-nav a:hover, .main-nav a.active { color: var(--yellow); }
 .main-nav a:hover::after, .main-nav a.active::after { transform: scaleX(1); }
-.nav-cta { background: var(--yellow); color: var(--ink-deep) !important; padding: 9px 18px; border-radius: var(--radius); font-family: var(--font-display); font-weight: 600; transition: background 0.15s var(--ease), transform 0.15s var(--ease); }
+.nav-cta {
+  background: var(--yellow); color: var(--ink-deep) !important; border-radius: var(--radius);
+  font-family: var(--font-display); font-weight: 600; white-space: nowrap; flex-shrink: 0;
+  padding: clamp(7px, 0.5vw + 4px, 9px) clamp(12px, 1vw + 6px, 18px);
+  transition: background 0.15s var(--ease), transform 0.15s var(--ease);
+}
 .nav-cta:hover { color: var(--ink-deep) !important; background: #f0c657; transform: translateY(-1px); }
 .nav-cta::after { display: none; }
 
-.nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; flex-shrink: 0; }
 .nav-toggle span { width: 22px; height: 2px; background: var(--chalk); transition: transform 0.15s var(--ease), opacity 0.15s var(--ease); }
 
 @media (max-width: 900px) {
   .main-nav {
     position: absolute; top: 72px; left: 0; right: 0; background: var(--ink);
-    flex-direction: column; align-items: flex-start; gap: 0; padding: 8px 24px 20px;
+    flex-direction: column; align-items: stretch; gap: 0; padding: 8px 24px 20px;
     border-bottom: 1px solid rgba(245,240,227,0.12);
     max-height: 0; overflow: hidden; opacity: 0; display: flex;
     transition: max-height 0.25s var(--ease), opacity 0.2s var(--ease);
   }
-  .main-nav.open { max-height: 400px; opacity: 1; }
+  .main-nav.open {
+    max-height: calc(100vh - 72px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    opacity: 1;
+  }
+  .main-nav a { font-size: 0.95rem; }
   .main-nav a::after { display: none; }
-  .main-nav a { padding: 12px 0; width: 100%; }
-  .nav-cta { margin-top: 8px; text-align: center; }
+  .main-nav a { padding: 13px 0; width: 100%; border-bottom: 1px solid rgba(245,240,227,0.08); }
+  .nav-cta { margin-top: 12px; text-align: center; padding: 12px 18px; font-size: 0.95rem; }
   .nav-toggle { display: flex; }
 }
 
