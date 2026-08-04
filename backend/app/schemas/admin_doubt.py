@@ -12,9 +12,11 @@ class DoubtReplyAdminOut(BaseModel):
 
 
 class DoubtAdminOut(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
     id: int
     chapter_id: int
+    class_label: str
+    subject_name: str
+    chapter_title: str
     student_name: str
     student_phone: str
     question_text: str

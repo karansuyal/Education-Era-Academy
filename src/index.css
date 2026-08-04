@@ -469,24 +469,63 @@ section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); max-width: 24ch; margin-bott
   text-align: center; color: var(--chalk); font-family: var(--font-mono); font-size: 0.85rem; padding: 24px;
 }
 /* ============================================================
-   Doubts (Q&A board)
+   Doubts (chat-style Q&A feed)
    ============================================================ */
-.doubts-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 32px; align-items: start; }
-@media (max-width: 860px) { .doubts-layout { grid-template-columns: 1fr; } }
+.doubt-composer {
+  background: #fff; border: 1px solid rgba(27,58,47,0.12); border-radius: 10px;
+  padding: 22px 24px; box-shadow: var(--shadow-md); margin-bottom: 36px;
+}
+.doubt-composer-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.doubt-composer-row:last-child { margin-bottom: 0; }
+.doubt-composer-row > * { flex: 1; min-width: 140px; }
+.doubt-composer-row .btn { flex: 0 0 auto; min-width: 130px; }
+.doubt-field-label { font-size: 0.76rem; font-weight: 600; color: var(--slate); margin-bottom: 4px; display: block; }
+.doubt-composer select,
+.doubt-composer input,
+.doubt-composer textarea {
+  width: 100%; font-family: var(--font-body); font-size: 0.92rem; padding: 10px 12px;
+  border: 1.5px solid rgba(27,58,47,0.18); border-radius: 6px; background: var(--chalk); color: var(--ink-deep);
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.doubt-composer select:focus, .doubt-composer input:focus, .doubt-composer textarea:focus {
+  outline: none; border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(232,185,63,0.25);
+}
+.doubt-composer-textarea { resize: vertical; min-height: 54px; margin-bottom: 12px; }
 
-.doubts-board { display: flex; flex-direction: column; gap: 16px; }
-.doubts-list { display: flex; flex-direction: column; gap: 16px; }
+.doubt-feed-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.doubt-filter-select {
+  font-family: var(--font-mono); font-size: 0.82rem; padding: 7px 12px; border-radius: 999px;
+  border: 1.5px solid rgba(27,58,47,0.2); background: #fff; color: var(--ink);
+}
 
-.doubt-card { background: #fff; border: 1px solid rgba(27,58,47,0.1); border-radius: 8px; padding: 20px 24px; box-shadow: var(--shadow-sm); }
-.doubt-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
-.doubt-student { font-weight: 600; font-size: 0.9rem; }
+.doubt-feed { display: flex; flex-direction: column; gap: 18px; }
+
+.doubt-thread { background: #fff; border: 1px solid rgba(27,58,47,0.1); border-radius: 10px; padding: 18px 22px; box-shadow: var(--shadow-sm); }
+.doubt-thread-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.doubt-avatar {
+  width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: var(--yellow);
+  display: flex; align-items: center; justify-content: center; font-family: var(--font-display);
+  font-weight: 700; font-size: 1rem; flex-shrink: 0;
+}
+.doubt-thread-meta { flex: 1; min-width: 0; }
+.doubt-thread-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.doubt-context-tag { font-family: var(--font-mono); font-size: 0.72rem; color: var(--slate); }
+.doubt-time { font-size: 0.76rem; color: var(--slate); }
 .doubt-status {
-  font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
-  padding: 3px 10px; border-radius: 999px; background: rgba(27,58,47,0.08); color: var(--slate);
+  font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 3px 10px; border-radius: 999px; background: rgba(27,58,47,0.08); color: var(--slate); flex-shrink: 0;
 }
 .doubt-status.answered { background: var(--yellow); color: var(--ink-deep); }
-.doubt-question { font-size: 0.95rem; margin-bottom: 10px; }
-.doubt-image { max-width: 240px; border-radius: 6px; margin-bottom: 10px; display: block; }
-.doubt-replies { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(27,58,47,0.15); }
-.doubt-reply { background: var(--chalk); border-radius: 6px; padding: 10px 14px; font-size: 0.88rem; }
-.doubt-reply-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--rank-red); margin-bottom: 4px; }
+
+.chat-bubble { border-radius: 10px; padding: 10px 14px; font-size: 0.92rem; line-height: 1.5; margin-bottom: 8px; max-width: 90%; }
+.chat-bubble-student { background: var(--chalk); border: 1px solid rgba(27,58,47,0.08); color: var(--ink); }
+.chat-bubble-teacher { background: #EAF3EC; border: 1px solid rgba(27,58,47,0.12); margin-left: auto; }
+.chat-bubble-label { display: block; font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rank-red); margin-bottom: 3px; }
+.doubt-image { max-width: 220px; border-radius: 8px; margin-bottom: 8px; display: block; }
+.doubt-waiting { font-size: 0.82rem; color: var(--slate); font-style: italic; margin: 4px 0 0; }
+
+@media (max-width: 640px) {
+  .chat-bubble { max-width: 100%; }
+  .doubt-thread-head { flex-wrap: wrap; }
+  .doubt-status { margin-left: 50px; }
+}

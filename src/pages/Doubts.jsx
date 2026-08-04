@@ -1,31 +1,45 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSiteData } from '../context/SiteDataContext'
 import { getAcademics, getDoubts, submitDoubt } from '../api/client'
 import usePageMeta from '../utils/usePageMeta'
+
+function timeAgo(isoString) {
+  const diffMs = Date.now() - new Date(isoString).getTime()
+  const mins = Math.floor(diffMs / 60000)
+  if (mins < 1) return 'just now'
+  if (mins < 60) return `${mins}m ago`
+  const hours = Math.floor(mins / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  if (days < 7) return `${days}d ago`
+  return new Date(isoString).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
+}
 
 export default function Doubts() {
   const { siteInfo } = useSiteData()
   usePageMeta(
     `Ask a Doubt — Class 9 to 12 & Govt Exam | ${siteInfo.name}`,
-    'Post your subject doubt chapter-wise and get it answered by our teachers. Browse doubts other students already asked.'
+    'Post your subject doubt and get it answered by our teachers. See doubts every student has asked, and every answer.'
   )
 
   const [classesData, setClassesData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [treeLoading, setTreeLoading] = useState(true)
+  const [treeError, setTreeError] = useState(null)
 
-  const [classId, setClassId] = useState(null)
-  const [subjectId, setSubjectId] = useState(null)
-  const [chapterId, setChapterId] = useState(null)
-
-  const [doubts, setDoubts] = useState([])
-  const [doubtsLoading, setDoubtsLoading] = useState(false)
+  // Which chapter the "ask" form is currently targeting.
+  const [askClassId, setAskClassId] = useState(null)
+  const [askSubjectId, setAskSubjectId] = useState(null)
+  const [askChapterId, setAskChapterId] = useState(null)
 
   const [form, setForm] = useState({ name: '', phone: '', question: '', imageUrl: '' })
   const [submitting, setSubmitting] = useState(false)
   const [submitMsg, setSubmitMsg] = useState('')
 
-  // Load the class -> subject -> chapter tree, same source as the Notes page.
+  // The feed — every doubt from every class, newest first.
+  const [doubts, setDoubts] = useState([])
+  const [feedLoading, setFeedLoading] = useState(true)
+  const [classFilter, setClassFilter] = useState('all')
+
   useEffect(() => {
     let cancelled = false
     getAcademics()
@@ -35,63 +49,60 @@ export default function Doubts() {
         const firstClass = data[0]
         const firstSubject = firstClass?.subjects[0]
         const firstChapter = firstSubject?.chapters[0]
-        setClassId(firstClass?.id ?? null)
-        setSubjectId(firstSubject?.id ?? null)
-        setChapterId(firstChapter?.id ?? null)
+        setAskClassId(firstClass?.id ?? null)
+        setAskSubjectId(firstSubject?.id ?? null)
+        setAskChapterId(firstChapter?.id ?? null)
       })
-      .catch((err) => { if (!cancelled) setError(err) })
-      .finally(() => { if (!cancelled) setLoading(false) })
+      .catch((err) => { if (!cancelled) setTreeError(err) })
+      .finally(() => { if (!cancelled) setTreeLoading(false) })
     return () => { cancelled = true }
   }, [])
 
-  // Re-fetch doubts whenever the selected chapter changes.
-  useEffect(() => {
-    if (!chapterId) return
-    let cancelled = false
-    setDoubtsLoading(true)
-    getDoubts(chapterId)
-      .then((list) => { if (!cancelled) setDoubts(list) })
-      .catch(() => { if (!cancelled) setDoubts([]) })
-      .finally(() => { if (!cancelled) setDoubtsLoading(false) })
-    return () => { cancelled = true }
-  }, [chapterId])
-
-  const activeClass = classesData.find((c) => c.id === classId) || classesData[0]
-  const activeSubject = activeClass?.subjects.find((s) => s.id === subjectId) || activeClass?.subjects[0]
-  const activeChapter = activeSubject?.chapters.find((c) => c.id === chapterId) || activeSubject?.chapters[0]
-
-  const handleClassChange = (cls) => {
-    setClassId(cls.id)
-    const firstSubject = cls.subjects[0]
-    setSubjectId(firstSubject?.id ?? null)
-    setChapterId(firstSubject?.chapters[0]?.id ?? null)
+  function loadFeed() {
+    setFeedLoading(true)
+    getDoubts()
+      .then(setDoubts)
+      .catch(() => setDoubts([]))
+      .finally(() => setFeedLoading(false))
   }
 
-  const handleSubjectChange = (sub) => {
-    setSubjectId(sub.id)
-    setChapterId(sub.chapters[0]?.id ?? null)
+  useEffect(loadFeed, [])
+
+  const askClass = classesData.find((c) => c.id === askClassId) || classesData[0]
+  const askSubject = askClass?.subjects.find((s) => s.id === askSubjectId) || askClass?.subjects[0]
+  const askChapter = askSubject?.chapters.find((c) => c.id === askChapterId) || askSubject?.chapters[0]
+
+  const handleAskClassChange = (e) => {
+    const cls = classesData.find((c) => c.id === Number(e.target.value))
+    setAskClassId(cls?.id ?? null)
+    setAskSubjectId(cls?.subjects[0]?.id ?? null)
+    setAskChapterId(cls?.subjects[0]?.chapters[0]?.id ?? null)
+  }
+
+  const handleAskSubjectChange = (e) => {
+    const sub = askClass?.subjects.find((s) => s.id === Number(e.target.value))
+    setAskSubjectId(sub?.id ?? null)
+    setAskChapterId(sub?.chapters[0]?.id ?? null)
   }
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!activeChapter) return
+    if (!askChapter) return
     setSubmitting(true)
     setSubmitMsg('')
     try {
       await submitDoubt({
-        chapterId: activeChapter.id,
+        chapterId: askChapter.id,
         studentName: form.name,
         studentPhone: form.phone,
         questionText: form.question,
         imageUrl: form.imageUrl,
       })
       setForm({ name: '', phone: '', question: '', imageUrl: '' })
-      setSubmitMsg("Posted! A teacher will reply here soon.")
-      // Refresh the list so the new doubt shows up immediately.
-      const list = await getDoubts(activeChapter.id)
-      setDoubts(list)
+      setSubmitMsg("Posted! Your doubt is now visible below — a teacher will reply soon.")
+      loadFeed()
     } catch (err) {
       setSubmitMsg(err.message || 'Could not post your doubt. Please try again.')
     } finally {
@@ -99,151 +110,148 @@ export default function Doubts() {
     }
   }
 
-  if (loading) {
-    return (
-      <section className="section-pad bg-chalk" style={{ minHeight: '60vh' }}>
-        <div className="wrap">
-          <p className="section-eyebrow">Doubt Solving</p>
-          <h2>Ask a doubt.</h2>
-          <p>Loading…</p>
-        </div>
-      </section>
-    )
-  }
+  const visibleDoubts = useMemo(() => {
+    if (classFilter === 'all') return doubts
+    return doubts.filter((d) => d.classLabel === classFilter)
+  }, [doubts, classFilter])
 
-  if (error || classesData.length === 0) {
-    return (
-      <section className="section-pad bg-chalk" style={{ minHeight: '60vh' }}>
-        <div className="wrap">
-          <p className="section-eyebrow">Doubt Solving</p>
-          <h2>Ask a doubt.</h2>
-          <p>Couldn't load chapters right now — please check back shortly.</p>
-        </div>
-      </section>
-    )
-  }
+  const classOptions = useMemo(() => {
+    const seen = new Set()
+    const list = []
+    for (const d of doubts) {
+      if (!seen.has(d.classLabel)) { seen.add(d.classLabel); list.push(d.classLabel) }
+    }
+    return list
+  }, [doubts])
 
   return (
     <section className="section-pad bg-chalk" style={{ minHeight: '60vh' }}>
       <div className="wrap">
         <p className="section-eyebrow">Doubt Solving</p>
         <h2>Ask a doubt, get it answered.</h2>
-        <p className="hero-sub" style={{ color: 'var(--slate)' }}>
-          Pick your chapter, post your question, and see what our teachers replied — or what other
-          students already asked.
+        <p className="hero-sub" style={{ color: 'var(--slate)', marginBottom: 28 }}>
+          Everyone's doubts and answers show up below — like a class group chat.
+          Ask yours, or see what your classmates already asked.
         </p>
 
-        {/* LEVEL 1 — Class tabs */}
-        <div className="notes-tabs">
-          {classesData.map((cls) => (
-            <button
-              key={cls.id}
-              className={`notes-tab ${cls.id === activeClass?.id ? 'active' : ''}`}
-              onClick={() => handleClassChange(cls)}
-            >
-              {cls.label}
-            </button>
-          ))}
+        {/* ---- Ask composer ---- */}
+        <div className="doubt-composer">
+          {treeLoading ? (
+            <p style={{ margin: 0 }}>Loading chapters…</p>
+          ) : treeError || classesData.length === 0 ? (
+            <p style={{ margin: 0 }}>Couldn't load chapters right now — please check back shortly.</p>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div className="doubt-composer-row">
+                <label className="admin-form-field" style={{ flex: 1 }}>
+                  <span className="doubt-field-label">Class</span>
+                  <select value={askClassId ?? ''} onChange={handleAskClassChange}>
+                    {classesData.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+                  </select>
+                </label>
+                <label className="admin-form-field" style={{ flex: 1 }}>
+                  <span className="doubt-field-label">Subject</span>
+                  <select value={askSubjectId ?? ''} onChange={handleAskSubjectChange}>
+                    {askClass?.subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </label>
+                <label className="admin-form-field" style={{ flex: 1 }}>
+                  <span className="doubt-field-label">Chapter</span>
+                  <select value={askChapterId ?? ''} onChange={(e) => setAskChapterId(Number(e.target.value))}>
+                    {askSubject?.chapters.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+                  </select>
+                </label>
+              </div>
+
+              <textarea
+                name="question"
+                required
+                rows="2"
+                className="doubt-composer-textarea"
+                placeholder={`Type your question about "${askChapter?.title || 'this chapter'}"…`}
+                value={form.question}
+                onChange={handleChange}
+              />
+
+              <div className="doubt-composer-row">
+                <input
+                  type="text" name="name" required placeholder="Your name"
+                  value={form.name} onChange={handleChange}
+                />
+                <input
+                  type="tel" name="phone" required placeholder="Phone number"
+                  value={form.phone} onChange={handleChange}
+                />
+                <input
+                  type="url" name="imageUrl" placeholder="Photo link (optional)"
+                  value={form.imageUrl} onChange={handleChange}
+                />
+                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                  {submitting ? 'Posting…' : 'Post doubt'}
+                </button>
+              </div>
+              {submitMsg && <p className="form-note" style={{ textAlign: 'left' }}>{submitMsg}</p>}
+            </form>
+          )}
         </div>
 
-        {/* LEVEL 2 — Subject tabs */}
-        {activeClass && (
-          <div className="notes-tabs notes-tabs-sub">
-            {activeClass.subjects.map((sub) => (
-              <button
-                key={sub.id}
-                className={`notes-tab notes-tab-sub ${sub.id === activeSubject?.id ? 'active' : ''}`}
-                onClick={() => handleSubjectChange(sub)}
-              >
-                {sub.name}
-              </button>
+        {/* ---- Feed header + filter ---- */}
+        <div className="doubt-feed-header">
+          <h3 style={{ margin: 0 }}>Recent doubts</h3>
+          {classOptions.length > 1 && (
+            <select
+              className="doubt-filter-select"
+              value={classFilter}
+              onChange={(e) => setClassFilter(e.target.value)}
+            >
+              <option value="all">All classes</option>
+              {classOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          )}
+        </div>
+
+        {/* ---- Feed ---- */}
+        {feedLoading ? (
+          <p>Loading doubts…</p>
+        ) : visibleDoubts.length === 0 ? (
+          <div className="notes-panel">
+            <p style={{ margin: 0 }}>No doubts posted yet. Be the first to ask!</p>
+          </div>
+        ) : (
+          <div className="doubt-feed">
+            {visibleDoubts.map((d) => (
+              <div className="doubt-thread" key={d.id}>
+                <div className="doubt-thread-head">
+                  <div className="doubt-avatar">{d.studentName.trim().charAt(0).toUpperCase() || '?'}</div>
+                  <div className="doubt-thread-meta">
+                    <div className="doubt-thread-name-row">
+                      <strong>{d.studentName}</strong>
+                      <span className="doubt-context-tag">{d.classLabel} · {d.subjectName} · {d.chapterTitle}</span>
+                    </div>
+                    <span className="doubt-time">{timeAgo(d.createdAt)}</span>
+                  </div>
+                  <span className={`doubt-status ${d.status === 'answered' ? 'answered' : ''}`}>
+                    {d.status === 'answered' ? 'Answered' : 'Pending'}
+                  </span>
+                </div>
+
+                <div className="chat-bubble chat-bubble-student">{d.questionText}</div>
+                {d.imageUrl && <img className="doubt-image" src={d.imageUrl} alt="Doubt attachment" />}
+
+                {d.replies.length > 0 ? (
+                  d.replies.map((r) => (
+                    <div className="chat-bubble chat-bubble-teacher" key={r.id}>
+                      <span className="chat-bubble-label">Teacher</span>
+                      {r.replyText}
+                    </div>
+                  ))
+                ) : (
+                  <p className="doubt-waiting">Waiting for a teacher's reply…</p>
+                )}
+              </div>
             ))}
           </div>
         )}
-
-        {/* LEVEL 3 — Chapter picker */}
-        {activeSubject && (
-          <div className="admin-form-field" style={{ maxWidth: 360, marginBottom: 28 }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--slate)' }}>Chapter</label>
-            <select
-              value={chapterId ?? ''}
-              onChange={(e) => setChapterId(Number(e.target.value))}
-              style={{
-                fontFamily: 'var(--font-body)', fontSize: '0.95rem', padding: '11px 12px',
-                border: '1.5px solid rgba(27,58,47,0.2)', borderRadius: 4, background: '#fff', color: 'var(--ink-deep)',
-              }}
-            >
-              {activeSubject.chapters.map((ch) => (
-                <option key={ch.id} value={ch.id}>{ch.title}</option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        <div className="doubts-layout">
-          {/* Ask form */}
-          <form className="enquiry-form" onSubmit={handleSubmit}>
-            <h3 style={{ marginTop: 0 }}>Ask about &ldquo;{activeChapter?.title}&rdquo;</h3>
-            <label>
-              Full name
-              <input type="text" name="name" required value={form.name} onChange={handleChange} placeholder="e.g. Karan Suyal" />
-            </label>
-            <label>
-              Phone number
-              <input type="tel" name="phone" required value={form.phone} onChange={handleChange} placeholder="10-digit mobile number" />
-            </label>
-            <label>
-              Your question
-              <textarea name="question" rows="4" required value={form.question} onChange={handleChange} placeholder="Type your doubt in detail…" />
-            </label>
-            <label>
-              Photo of the question (optional link)
-              <input type="url" name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="Paste an image link, if you have one" />
-            </label>
-            <button type="submit" className="btn btn-primary btn-full" disabled={submitting}>
-              {submitting ? 'Posting…' : 'Post my doubt'}
-            </button>
-            {submitMsg && <p className="form-note">{submitMsg}</p>}
-            <p className="form-note">Your phone number is only visible to our teachers, never shown publicly.</p>
-          </form>
-
-          {/* Doubt board for the selected chapter */}
-          <div className="doubts-board">
-            {doubtsLoading ? (
-              <p>Loading doubts…</p>
-            ) : doubts.length === 0 ? (
-              <div className="notes-panel">
-                <p style={{ margin: 0 }}>No doubts posted for this chapter yet. Be the first to ask!</p>
-              </div>
-            ) : (
-              <div className="doubts-list">
-                {doubts.map((d) => (
-                  <div className="doubt-card" key={d.id}>
-                    <div className="doubt-card-head">
-                      <span className="doubt-student">{d.studentName}</span>
-                      <span className={`doubt-status ${d.status === 'answered' ? 'answered' : ''}`}>
-                        {d.status === 'answered' ? 'Answered' : 'Pending'}
-                      </span>
-                    </div>
-                    <p className="doubt-question">{d.questionText}</p>
-                    {d.imageUrl && <img className="doubt-image" src={d.imageUrl} alt="Doubt attachment" />}
-
-                    {d.replies.length > 0 && (
-                      <div className="doubt-replies">
-                        {d.replies.map((r) => (
-                          <div className="doubt-reply" key={r.id}>
-                            <div className="doubt-reply-label">Teacher's reply</div>
-                            {r.replyText}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
       </div>
     </section>
   )

@@ -76,6 +76,9 @@ export default function DoubtsPage() {
                 <div>
                   <strong>{d.student_name}</strong>{' '}
                   <span style={{ color: 'var(--slate)', fontSize: '0.82rem' }}>({d.student_phone})</span>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--slate)', marginTop: 2 }}>
+                    {d.class_label} · {d.subject_name} · {d.chapter_title}
+                  </div>
                 </div>
                 <span className={`admin-tag${d.status === 'answered' ? ' yes' : ''}`}>
                   {d.status === 'answered' ? 'Answered' : 'Pending'}

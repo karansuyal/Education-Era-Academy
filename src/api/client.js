@@ -200,6 +200,9 @@ function normalizeDoubt(d) {
   return {
     id: d.id,
     chapterId: d.chapter_id,
+    classLabel: d.class_label,
+    subjectName: d.subject_name,
+    chapterTitle: d.chapter_title,
     studentName: d.student_name,
     questionText: d.question_text,
     imageUrl: d.image_url,

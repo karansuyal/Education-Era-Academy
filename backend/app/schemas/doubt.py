@@ -11,9 +11,11 @@ class DoubtReplyOut(BaseModel):
 
 
 class DoubtOut(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
     id: int
     chapter_id: int
+    class_label: str
+    subject_name: str
+    chapter_title: str
     student_name: str
     question_text: str
     image_url: str
