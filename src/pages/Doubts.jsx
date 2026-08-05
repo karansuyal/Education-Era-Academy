@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSiteData } from '../context/SiteDataContext'
-import { getAcademics, getDoubts, submitDoubt } from '../api/client'
+import { getAcademics, getDoubts, normalizeDoubt, submitDoubt, wsUrl } from '../api/client'
 import usePageMeta from '../utils/usePageMeta'
+import useLiveSocket from '../utils/useLiveSocket'
 
 const IDENTITY_KEY = 'eea_doubt_identity'
 
@@ -96,6 +97,20 @@ export default function Doubts() {
   }
 
   useEffect(loadFeed, [])
+
+  // Live updates: new doubts, new replies, and deletions land here in
+  // real time so the feed never needs a manual reload.
+  useLiveSocket(wsUrl('/doubts/ws'), (msg) => {
+    if (msg.type === 'new_doubt') {
+      const incoming = normalizeDoubt(msg.doubt)
+      setDoubts((prev) => (prev.some((d) => d.id === incoming.id) ? prev : [incoming, ...prev]))
+    } else if (msg.type === 'doubt_updated') {
+      const incoming = normalizeDoubt(msg.doubt)
+      setDoubts((prev) => prev.map((d) => (d.id === incoming.id ? incoming : d)))
+    } else if (msg.type === 'doubt_deleted') {
+      setDoubts((prev) => prev.filter((d) => d.id !== msg.doubt_id))
+    }
+  })
 
   const askClass = classesData.find((c) => c.id === askClassId) || classesData[0]
   const askSubject = askClass?.subjects.find((s) => s.id === askSubjectId) || askClass?.subjects[0]

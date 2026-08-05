@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { adminGet, adminPatch, adminDelete } from '../adminApi'
+import { adminGet, adminPatch, adminDelete, getTokens } from '../adminApi'
+import { wsUrl } from '../../api/client'
+import useLiveSocket from '../../utils/useLiveSocket'
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState([])
@@ -17,6 +19,14 @@ export default function LeadsPage() {
   }
 
   useEffect(load, [filter])
+
+  // Live: a new enquiry (or a status change/delete from another admin
+  // tab) refreshes the table without needing a manual reload.
+  const { accessToken } = getTokens()
+  useLiveSocket(
+    accessToken ? wsUrl(`/admin/leads/ws?token=${encodeURIComponent(accessToken)}`) : null,
+    () => load(),
+  )
 
   async function toggleContacted(lead) {
     try {

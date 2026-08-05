@@ -3,8 +3,10 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.deps import get_current_admin
+from app.core.ws_manager import doubts_hub
 from app.models.academics import Chapter, Subject
 from app.models.doubt import Doubt, DoubtReply
+from app.routers.doubts import _serialize as _serialize_public
 from app.schemas.admin_doubt import DoubtAdminOut, DoubtReplyAdminOut, DoubtReplyCreate
 
 router = APIRouter(prefix="/admin/doubts", tags=["admin:doubts"])
@@ -52,7 +54,7 @@ def list_doubts(
 
 
 @router.post("/{doubt_id}/reply", response_model=DoubtAdminOut)
-def reply_to_doubt(
+async def reply_to_doubt(
     doubt_id: int,
     payload: DoubtReplyCreate,
     db: Session = Depends(get_db),
@@ -67,14 +69,20 @@ def reply_to_doubt(
     doubt.status = "answered"
     db.commit()
     db.refresh(doubt)
+
+    await doubts_hub.broadcast({"type": "doubt_updated", "doubt": _serialize_public(doubt).model_dump()})
+
     return _serialize(doubt)
 
 
 @router.delete("/{doubt_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_doubt(doubt_id: int, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+async def delete_doubt(doubt_id: int, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
     doubt = db.get(Doubt, doubt_id)
     if doubt is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Doubt not found")
     db.delete(doubt)
     db.commit()
+
+    await doubts_hub.broadcast({"type": "doubt_deleted", "doubt_id": doubt_id})
+
     return None

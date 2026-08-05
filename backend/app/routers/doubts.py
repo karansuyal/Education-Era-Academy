@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, WebSocket, WebSocketDisconnect, status
 from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.limiter import limiter
 from app.core.telegram import send_telegram_notification
+from app.core.ws_manager import doubts_hub
 from app.models.academics import Chapter, Subject
 from app.models.doubt import Doubt
 from app.schemas.doubt import DoubtCreate, DoubtOut, DoubtReplyOut, DoubtSubmitOut
@@ -54,9 +55,24 @@ def get_doubt(doubt_id: int, db: Session = Depends(get_db)):
     return _serialize(doubt)
 
 
+@router.websocket("/ws")
+async def doubts_live(websocket: WebSocket):
+    """Live channel: broadcasts new doubts, new replies, and deletions.
+    No data is sent to the socket on its own — clients still fetch the
+    feed once over REST, this just tells them when to update it."""
+    await doubts_hub.connect(websocket)
+    try:
+        while True:
+            # We don't expect the client to send anything; this just
+            # keeps the connection open and detects disconnects.
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        await doubts_hub.disconnect(websocket)
+
+
 @router.post("", response_model=DoubtSubmitOut, status_code=status.HTTP_201_CREATED)
 @limiter.limit("10/hour")
-def submit_doubt(request: Request, payload: DoubtCreate, db: Session = Depends(get_db)):
+async def submit_doubt(request: Request, payload: DoubtCreate, db: Session = Depends(get_db)):
     chapter = db.get(Chapter, payload.chapter_id)
     if chapter is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Chapter not found")
@@ -71,6 +87,8 @@ def submit_doubt(request: Request, payload: DoubtCreate, db: Session = Depends(g
     db.add(doubt)
     db.commit()
     db.refresh(doubt)
+
+    await doubts_hub.broadcast({"type": "new_doubt", "doubt": _serialize(doubt).model_dump()})
 
     # Best-effort ping to the teacher — never blocks/breaks the submission if it fails.
     send_telegram_notification(

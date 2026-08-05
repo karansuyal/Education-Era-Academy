@@ -13,6 +13,12 @@
 export const API_BASE_URL =
   (import.meta.env.VITE_API_URL || 'https://education-era-academy.onrender.com').replace(/\/+$/, '')
 
+// Turns the same backend base URL into a ws:// or wss:// URL for the
+// live-update channels (e.g. wsUrl('/doubts/ws')).
+export function wsUrl(path) {
+  return `${API_BASE_URL.replace(/^http/, 'ws')}${path}`
+}
+
 async function request(path, { method = 'GET', body, timeoutMs = 15000 } = {}) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
@@ -196,7 +202,7 @@ export function submitContactLead({ name, phone, courseInterested, message }) {
 // ------------------------------------------------------------
 // Doubts (public Q&A board, per chapter)
 // ------------------------------------------------------------
-function normalizeDoubt(d) {
+export function normalizeDoubt(d) {
   return {
     id: d.id,
     chapterId: d.chapter_id,

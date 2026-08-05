@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { adminGet, adminPost, adminDelete } from '../adminApi'
+import { wsUrl } from '../../api/client'
+import useLiveSocket from '../../utils/useLiveSocket'
 
 export default function DoubtsPage() {
   const [doubts, setDoubts] = useState([])
@@ -19,6 +21,10 @@ export default function DoubtsPage() {
   }
 
   useEffect(load, [filter])
+
+  // Live: any new doubt, new reply, or delete (from this tab, another
+  // admin tab, or a student posting on the site) refreshes the list.
+  useLiveSocket(wsUrl('/doubts/ws'), () => load())
 
   async function sendReply(doubtId) {
     const text = (replyDrafts[doubtId] || '').trim()
