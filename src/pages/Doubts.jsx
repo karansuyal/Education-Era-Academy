@@ -214,7 +214,7 @@ export default function Doubts() {
                 required
                 rows="2"
                 className="doubt-composer-textarea"
-                placeholder={`Type your question about "${askChapter?.title || 'this chapter'}"…`}
+                placeholder="Type your question…"
                 value={form.question}
                 onChange={handleChange}
               />
